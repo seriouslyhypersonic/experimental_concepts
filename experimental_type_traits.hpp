@@ -171,7 +171,7 @@ using select_t = typename select<Head, Tail...>::type;
 namespace detail
 {
 template<class T>
-using has_type_imp= typename T::type;
+using has_type_imp = typename T::type;
 } // namespace detail
 /**
  * @trait Check if a type has the member typedef \c type
@@ -190,142 +190,142 @@ inline constexpr bool has_type_v = has_type<T>::value;
 
 namespace experimental
 {
-/// Template alias for the type defined by trait T
-template<class T> using __t = typename T::type;
-
-/// The value defined by trait T
-template<class T>
-constexpr typename __t<T>::value_type __v = __t<T>::value;
-
-/// Store the type of T, effectively creating a trait
-template<class T> struct __id { using type = T; };
-
-/// Add lvalue ref and const to T, which is, by default, striped of const
-template <class T, class X = std::remove_reference_t<T>>
-using __cref = std::add_lvalue_reference_t<std::add_const_t<X>>;
-
-/// Remove cv and ref qualifiers
-template <class T>
-using __uncvref = remove_cvref_t<T>;
-
-/// Existence of builtin common reference
-template <class T, class U>
-using __cond = decltype(declval<bool>() ? declval<T>() : declval<U>());
-
-// builtint_common
-
-// definition 1 - default case of no simple common reference
-template<class T, class U>
-struct __builtin_common_def1 { };
-
-// definition 2 - exists builtin common reference (because _req is detected)
-template<class T, class U>
-constexpr bool __builtin_common_def2_req =
-    is_detected_v<__cond, __cref<T>, __cref<U>>;
-template<class T, class U>
-struct __builtin_common_def2:
-    std::decay<detected_t<__cond, __cref<T>, __cref<U> >>
-{};
-
-// select the right definition for __builtin_common
-template<class T, class U>
-struct __builtin_common:
-    select_t<condition<__builtin_common_def2_req<T, U>
-                      ,__builtin_common_def2<T, U>
-                      >
-            ,__builtin_common_def1<T, U>> { };
-
-// helper typedef (__builtin_common_def1 has no member typedef type!)
-template<class T, class U>
-using __builtin_common_t = typename __builtin_common<T, U>::type;
-
-// Specialization T and U are rvalue references:
-// rref specialization if builtin common reference of T& and U& exists and
-// convertible to the that type's corresponding rref type.
-template<class T, class U, class R = __builtin_common_t<T&, U&>>
-using __rref_res =
-    std::conditional_t<std::is_reference_v<R>, std::remove_reference_t<R>&&, R>;
-
-template<class T, class U>
-constexpr bool __builtin_common_rref_spec_req =
-    is_detected_v<__builtin_common_t, T&, U&> &&
-    std::is_convertible_v<T&&, __rref_res<T, U>> &&
-    std::is_convertible_v<U&&, __rref_res<T, U>>;
-
-// spec in case __builtin_common_rref_spec_req met
-template<class T, class U>
-struct __builtin_common_rref_spec: __id<__rref_res<T, U>>{ };
-
-// spec in case __builtin_common_spec_req not met
-template<class T, class U>
-struct __builtin_common_no_rref_spec { /* no coomon reference */ };
-
-// select the right specialization
-template<class T, class U>
-struct __builtin_common<T&&, U&&>:
-    select_t<condition<__builtin_common_rref_spec_req<T, U>
-                      ,__builtin_common_rref_spec<T, U>
-                      >
-             ,__builtin_common_no_rref_spec<T, U>>
-{ };
-
-// Specialization T and U are lvalue references:
-// T and U are both lvalue references and there is a built in common reference
-// when the union of their cv qualifiers is applied to both types
-template<class T, class U>
-using __lref_res = __cond<copy_cv_t<T, U>&, copy_cv_t<U, T>&>;
-
-template<class T, class U>
-constexpr bool __builtin_common_lref_spec_req = is_detected_v<__lref_res, T, U>;
-
-// spec in case __builtin_common_lref_spec_req met
-template<class T, class U>
-struct __builtin_common_lref_spec: __id<detected_t<__lref_res, T, U>> { };
-
-// spec in case __builtin_common_lref_spec_req not met
-template<class T, class U>
-struct __built_in_common_no_lref_spec { /* no coomon reference */ };
-
-// select the right specialization
-template<class T, class U>
-struct __builtin_common<T&, U&>:
-    select_t<condition<__builtin_common_lref_spec_req<T, U>
-                      ,__builtin_common_lref_spec<T, U>
-                      >
-            ,__built_in_common_no_lref_spec<T,U>>
-{ };
-
-// Specialization one type is lref and the other is rref
-template<class T, class U>
-constexpr bool __builtin_common_rlref_spec_req =
-    is_detected_v<__builtin_common_t, T&, const U&> &&
-    std::is_convertible_v<U&&, detected_t<__builtin_common_t, T&, const U&>>;
-
-// spec in case __builtin_common_rlref_spec_req met
-template<class T, class U>
-struct __builtin_common_rlref_spec: __builtin_common<T&, const U&>
-{ };
-
-// spec in case __builtin_common_rlref_spec_req not met
-template<class T, class U>
-struct __builtin_common_no_rlref_spec { using type = void;/* no coomon reference */ };
-
-// select the right specializations for the two lvalue and rvalue combinations
-template<class T, class U>
-struct __builtin_common<T&, U&&>:
-    select_t<condition<__builtin_common_rlref_spec_req<T,U>
-                      ,__builtin_common_rlref_spec<T, U>
-                      >
-            ,__builtin_common_no_rlref_spec<T, U>>
-{ };
-
-template<class T, class U>
-struct __builtin_common<T&&, U&>: __builtin_common<U&, T&&> { };
-
-
-
-static_assert(std::is_same_v<__builtin_common_def2<const int, char*>::type, nonesuch>);
-static_assert(std::is_same_v<__builtin_common_t<int&&, int&>, const int&>);
+///// Template alias for the type defined by trait T
+//template<class T> using __t = typename T::type;
+//
+///// The value defined by trait T
+//template<class T>
+//constexpr typename __t<T>::value_type __v = __t<T>::value;
+//
+///// Store the type of T, effectively creating a trait
+//template<class T> struct __id { using type = T; };
+//
+///// Add lvalue ref and const to T, which is, by default, striped of const
+//template <class T, class X = std::remove_reference_t<T>>
+//using __cref = std::add_lvalue_reference_t<std::add_const_t<X>>;
+//
+///// Remove cv and ref qualifiers
+//template <class T>
+//using __uncvref = remove_cvref_t<T>;
+//
+///// Existence of builtin common reference
+//template <class T, class U>
+//using __cond = decltype(declval<bool>() ? declval<T>() : declval<U>());
+//
+//// builtint_common
+//
+//// definition 1 - default case of no simple common reference
+//template<class T, class U>
+//struct __builtin_common_def1 { };
+//
+//// definition 2 - exists builtin common reference (because _req is detected)
+//template<class T, class U>
+//constexpr bool __builtin_common_def2_req =
+//    is_detected_v<__cond, __cref<T>, __cref<U>>;
+//template<class T, class U>
+//struct __builtin_common_def2:
+//    std::decay<detected_t<__cond, __cref<T>, __cref<U> >>
+//{};
+//
+//// select the right definition for __builtin_common
+//template<class T, class U>
+//struct __builtin_common:
+//    select_t<condition<__builtin_common_def2_req<T, U>
+//                      ,__builtin_common_def2<T, U>
+//                      >
+//            ,__builtin_common_def1<T, U>> { };
+//
+//// helper typedef (__builtin_common_def1 has no member typedef type!)
+//template<class T, class U>
+//using __builtin_common_t = typename __builtin_common<T, U>::type;
+//
+//// Specialization T and U are rvalue references:
+//// rref specialization if builtin common reference of T& and U& exists and
+//// convertible to the that type's corresponding rref type.
+//template<class T, class U, class R = __builtin_common_t<T&, U&>>
+//using __rref_res =
+//    std::conditional_t<std::is_reference_v<R>, std::remove_reference_t<R>&&, R>;
+//
+//template<class T, class U>
+//constexpr bool __builtin_common_rref_spec_req =
+//    is_detected_v<__builtin_common_t, T&, U&> &&
+//    std::is_convertible_v<T&&, __rref_res<T, U>> &&
+//    std::is_convertible_v<U&&, __rref_res<T, U>>;
+//
+//// spec in case __builtin_common_rref_spec_req met
+//template<class T, class U>
+//struct __builtin_common_rref_spec: __id<__rref_res<T, U>>{ };
+//
+//// spec in case __builtin_common_spec_req not met
+//template<class T, class U>
+//struct __builtin_common_no_rref_spec { /* no coomon reference */ };
+//
+//// select the right specialization
+//template<class T, class U>
+//struct __builtin_common<T&&, U&&>:
+//    select_t<condition<__builtin_common_rref_spec_req<T, U>
+//                      ,__builtin_common_rref_spec<T, U>
+//                      >
+//             ,__builtin_common_no_rref_spec<T, U>>
+//{ };
+//
+//// Specialization T and U are lvalue references:
+//// T and U are both lvalue references and there is a built in common reference
+//// when the union of their cv qualifiers is applied to both types
+//template<class T, class U>
+//using __lref_res = __cond<copy_cv_t<T, U>&, copy_cv_t<U, T>&>;
+//
+//template<class T, class U>
+//constexpr bool __builtin_common_lref_spec_req = is_detected_v<__lref_res, T, U>;
+//
+//// spec in case __builtin_common_lref_spec_req met
+//template<class T, class U>
+//struct __builtin_common_lref_spec: __id<detected_t<__lref_res, T, U>> { };
+//
+//// spec in case __builtin_common_lref_spec_req not met
+//template<class T, class U>
+//struct __built_in_common_no_lref_spec { /* no coomon reference */ };
+//
+//// select the right specialization
+//template<class T, class U>
+//struct __builtin_common<T&, U&>:
+//    select_t<condition<__builtin_common_lref_spec_req<T, U>
+//                      ,__builtin_common_lref_spec<T, U>
+//                      >
+//            ,__built_in_common_no_lref_spec<T,U>>
+//{ };
+//
+//// Specialization one type is lref and the other is rref
+//template<class T, class U>
+//constexpr bool __builtin_common_rlref_spec_req =
+//    is_detected_v<__builtin_common_t, T&, const U&> &&
+//    std::is_convertible_v<U&&, detected_t<__builtin_common_t, T&, const U&>>;
+//
+//// spec in case __builtin_common_rlref_spec_req met
+//template<class T, class U>
+//struct __builtin_common_rlref_spec: __builtin_common<T&, const U&>
+//{ };
+//
+//// spec in case __builtin_common_rlref_spec_req not met
+//template<class T, class U>
+//struct __builtin_common_no_rlref_spec { using type = void;/* no coomon reference */ };
+//
+//// select the right specializations for the two lvalue and rvalue combinations
+//template<class T, class U>
+//struct __builtin_common<T&, U&&>:
+//    select_t<condition<__builtin_common_rlref_spec_req<T,U>
+//                      ,__builtin_common_rlref_spec<T, U>
+//                      >
+//            ,__builtin_common_no_rlref_spec<T, U>>
+//{ };
+//
+//template<class T, class U>
+//struct __builtin_common<T&&, U&>: __builtin_common<U&, T&&> { };
+//
+//
+//
+//static_assert(std::is_same_v<__builtin_common_def2<const int, char*>::type, nonesuch>);
+//static_assert(std::is_same_v<__builtin_common_t<int&&, int&>, const int&>);
 
 
 // TESTS FOR EXPERIMENTAL IMPLEMENTATION ---------------------------------------
