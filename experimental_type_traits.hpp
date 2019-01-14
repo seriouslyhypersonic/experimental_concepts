@@ -410,41 +410,41 @@ struct A { };
 struct B: A { };
 struct C { };
 
-static_assert(std::is_same_v<__builtin_common_t<A, A>, A>);
-static_assert(std::is_same_v<__builtin_common_t<B, B>, B>);
-static_assert(std::is_same_v<__builtin_common_t<A, B>, A>);
-static_assert(std::is_same_v<__builtin_common_t<B, A>, A>);
-static_assert(!is_detected_v<__builtin_common_t, A, C>);
-static_assert(!is_detected_v<__builtin_common_t, C, A>);
-
-static_assert(std::is_same_v<__builtin_common_t<A&, A&>, A&>);
-static_assert(std::is_same_v<__builtin_common_t<B&, B&>, B&>);
-static_assert(std::is_same_v<__builtin_common_t<A&, B&>, A&>);
-static_assert(std::is_same_v<__builtin_common_t<B&, A&>, A&>);
-static_assert(!is_detected_v<__builtin_common_t, A&, C&>);
-static_assert(!is_detected_v<__builtin_common_t, C&, A&>);
-
-static_assert(std::is_same_v<__builtin_common_t<const A&, B&>, const A&>);
-static_assert(std::is_same_v<__builtin_common_t<A&, const B&>, const A&>);
-static_assert(std::is_same_v<__builtin_common_t<A& , volatile B&>, volatile A&>);
-static_assert(std::is_same_v<__builtin_common_t<volatile A& , B&>, volatile A&>);
-static_assert(std::is_same_v<__builtin_common_t<A& , const volatile B&>, const volatile A&>);
-static_assert(std::is_same_v<__builtin_common_t<const volatile A& , B&>, const volatile A&>);
-static_assert(!is_detected_v<__builtin_common_t,const A&, C&>);
-static_assert(!is_detected_v<__builtin_common_t, A&, const C&>);
-
-static_assert(std::is_same_v<__builtin_common_t<A&&, B&&>, A&&>);
-static_assert(std::is_same_v<__builtin_common_t<B&&, A&&>, A&&>);
-static_assert(std::is_same_v<__builtin_common_t<const A&&, B&&>, const A&&>);
-static_assert(std::is_same_v<__builtin_common_t<const B&&, A&&>, const A&&>);
-
-static_assert(std::is_same_v<__builtin_common_t<A&&, B&>, const A&>);
-static_assert(std::is_same_v<__builtin_common_t<B&&, A&>, const A&>);
-static_assert(std::is_same_v<__builtin_common_t<const A&&, B&>, const A&>);
-static_assert(std::is_same_v<__builtin_common_t<const B&&, A&>, const A&>);
-//static_assert(std::is_same_v<__builtin_common_t<volatile A&&, B&>, const volatile A>);
-
-static_assert(std::is_same_v<__builtin_common_t<volatile int &&, int&>, void>);
+//static_assert(std::is_same_v<__builtin_common_t<A, A>, A>);
+//static_assert(std::is_same_v<__builtin_common_t<B, B>, B>);
+//static_assert(std::is_same_v<__builtin_common_t<A, B>, A>);
+//static_assert(std::is_same_v<__builtin_common_t<B, A>, A>);
+//static_assert(!is_detected_v<__builtin_common_t, A, C>);
+//static_assert(!is_detected_v<__builtin_common_t, C, A>);
+//
+//static_assert(std::is_same_v<__builtin_common_t<A&, A&>, A&>);
+//static_assert(std::is_same_v<__builtin_common_t<B&, B&>, B&>);
+//static_assert(std::is_same_v<__builtin_common_t<A&, B&>, A&>);
+//static_assert(std::is_same_v<__builtin_common_t<B&, A&>, A&>);
+//static_assert(!is_detected_v<__builtin_common_t, A&, C&>);
+//static_assert(!is_detected_v<__builtin_common_t, C&, A&>);
+//
+//static_assert(std::is_same_v<__builtin_common_t<const A&, B&>, const A&>);
+//static_assert(std::is_same_v<__builtin_common_t<A&, const B&>, const A&>);
+//static_assert(std::is_same_v<__builtin_common_t<A& , volatile B&>, volatile A&>);
+//static_assert(std::is_same_v<__builtin_common_t<volatile A& , B&>, volatile A&>);
+//static_assert(std::is_same_v<__builtin_common_t<A& , const volatile B&>, const volatile A&>);
+//static_assert(std::is_same_v<__builtin_common_t<const volatile A& , B&>, const volatile A&>);
+//static_assert(!is_detected_v<__builtin_common_t,const A&, C&>);
+//static_assert(!is_detected_v<__builtin_common_t, A&, const C&>);
+//
+//static_assert(std::is_same_v<__builtin_common_t<A&&, B&&>, A&&>);
+//static_assert(std::is_same_v<__builtin_common_t<B&&, A&&>, A&&>);
+//static_assert(std::is_same_v<__builtin_common_t<const A&&, B&&>, const A&&>);
+//static_assert(std::is_same_v<__builtin_common_t<const B&&, A&&>, const A&&>);
+//
+//static_assert(std::is_same_v<__builtin_common_t<A&&, B&>, const A&>);
+//static_assert(std::is_same_v<__builtin_common_t<B&&, A&>, const A&>);
+//static_assert(std::is_same_v<__builtin_common_t<const A&&, B&>, const A&>);
+//static_assert(std::is_same_v<__builtin_common_t<const B&&, A&>, const A&>);
+////static_assert(std::is_same_v<__builtin_common_t<volatile A&&, B&>, const volatile A>);
+//
+//static_assert(std::is_same_v<__builtin_common_t<volatile int &&, int&>, void>);
 //static_assert(std::is_same_v<__builtin_common_t<int , A&>, const A&>);
 } // namespace experimental
 
