@@ -1,10 +1,13 @@
 /*
- * Copyright Nuno Alves de Sousa 2019
+ * Nuno Alves de Sousa 2019
  * nunoalvesdesousa (at) -> me <- (dot) com
  *
  * Use, modification and distribution is subject to the Boost Software License,
  * Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
+ *
+ * Copyright Duncan P. N. Exon Smith
+ * URL: https://gist.github.com/dexonsmith
  */
 
 #ifndef REQUIRES_EXPRESSION_H
