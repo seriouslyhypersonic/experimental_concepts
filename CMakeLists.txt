@@ -21,7 +21,9 @@ target_sources(conceptslib INTERFACE
 target_include_directories(conceptslib INTERFACE
         ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
+
 add_executable(concepts_test
         main.cpp
         tests/test_type_traits.hpp)
+
 target_link_libraries(concepts_test conceptslib)

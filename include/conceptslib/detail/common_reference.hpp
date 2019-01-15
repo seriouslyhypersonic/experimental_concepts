@@ -12,8 +12,8 @@
  *                  - License    : BSL-1.0
  */
 
-#ifndef IMPL_DETAIL_COMMON_REFERENCE_H
-#define IMPL_DETAIL_COMMON_REFERENCE_H
+#ifndef DETAIL_COMMON_REFERENCE_H
+#define DETAIL_COMMON_REFERENCE_H
 
 #include <utility>
 #include <type_traits>
@@ -165,6 +165,7 @@ struct basic_common_reference { };
 template<class...>
 struct common_reference;
 
+/// Helper typedef to access \c common_reference member \c type
 template<class... Ts>
 using common_reference_t = typename common_reference<Ts...>::type;
 
@@ -174,6 +175,18 @@ struct common_reference<>
 { };
 
 // common_reference: case sizeof...(Ts) only contains type T0, member type is T0
+/**
+ * @metafunction Determines the common reference of type T0
+ * @details If only one argument is suplied, the member \c type names the same
+ * type as T0.
+ * @note The rules for determining the common_reference can be found at
+ * https://en.cppreference.com/w/cpp/types/common_reference
+ * @attention This function mimics the functionality of the future C++20
+ * std::common_type. Upon the release of C++20, this function should be
+ * deprecated.
+ * @warning The behavior is undefined if any of the types in T... is an
+ * incomplete type other than (possibly cv-qualified) void
+ */
 template<class T0>
 struct common_reference<T0>
 {
@@ -236,6 +249,19 @@ struct binary_common_ref<T, U
 
 } // namespace detail
 
+/**
+ * @metafunction Determines the common reference type of the types T1 and T2
+ * @details Determines the type to which all Ts... can be converted or bound.
+ * If such a type exists the member \c type names that type. Otherwise,
+ * there is no member \c type.
+ * @note The rules for determining the common_reference can be found at
+ * https://en.cppreference.com/w/cpp/types/common_reference
+ * @attention This function mimics the functionality of the future C++20
+ * std::common_type. Upon the release of C++20, this function should be
+ * deprecated.
+ * @warning The behavior is undefined if any of the types in T... is an
+ * incomplete type other than (possibly cv-qualified) void
+ */
 template<class T1, class T2>
 struct common_reference<T1, T2>: detail::binary_common_ref<T1, T2>
 { };
@@ -256,6 +282,19 @@ struct multiple_common_reference<std::void_t<common_reference_t<T1, T2>>
 
 } // namespace detail
 
+/**
+ * @metafunction Determines the common reference type of the types Ts...
+ * @details Determines the type to which all Ts... can be converted or bound.
+ * If such a type exists the member \c type names that type. Otherwise,
+ * there is no member \c type.
+ * @note The rules for determining the common_reference can be found at
+ * https://en.cppreference.com/w/cpp/types/common_reference
+ * @attention This function mimics the functionality of the future C++20
+ * std::common_type. Upon the release of C++20, this function should be
+ * deprecated.
+ * @warning The behavior is undefined if any of the types in T... is an
+ * incomplete type other than (possibly cv-qualified) void
+ */
 template<class T1, class T2, class... Rest>
 struct common_reference<T1, T2, Rest...>
     : detail::multiple_common_reference<void, T1, T2, Rest...>
@@ -263,4 +302,4 @@ struct common_reference<T1, T2, Rest...>
 
 } // namespace traits
 
-#endif //IMPL_DETAIL_COMMON_REFERENCE_H
+#endif //DETAIL_COMMON_REFERENCE_H

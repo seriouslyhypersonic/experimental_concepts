@@ -6,14 +6,14 @@
  * http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef IMPL_DETAIL_TYPE_TRAITS_H
-#define IMPL_DETAIL_TYPE_TRAITS_H
+#ifndef DETAIL_TYPE_TRAITS_H
+#define DETAIL_TYPE_TRAITS_H
 
 #include <type_traits>
 #include <experimental/type_traits>
 
 /**
- * @file experimental_type_traits.hpp
+ * @file type_traits.hpp
  *
  * Resources:
  *  - https://en.cppreference.com/w/cpp/experimental/is_detected
@@ -73,10 +73,6 @@ std::experimental::is_detected_convertible<To, Op, Args...>;
 template <class To, template<class...> class Op, class... Args>
 constexpr bool is_detected_convertible_v =
                std::experimental::is_detected_convertible_v<To, Op, Args...>;
-
-// METAFUNCTIONS
-
-using std::declval;
 
 /* --- Metafunction remove_cvref --- */
 /**
@@ -242,4 +238,4 @@ inline constexpr bool has_type_v = has_type<T>::value;
 } // namespace traits
 
 
-#endif //IMPL_DETAIL_TYPE_TRAITS_H
+#endif //DETAIL_TYPE_TRAITS_H

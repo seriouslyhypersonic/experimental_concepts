@@ -12,8 +12,8 @@
  *                  - License    : BSL-1.0
  */
 
-#ifndef IMPL_DETAIL_COMMON_TYPE_H
-#define IMPL_DETAIL_COMMON_TYPE_H
+#ifndef DETAIL_COMMON_TYPE_H
+#define DETAIL_COMMON_TYPE_H
 
 #include <type_traits>
 
@@ -22,10 +22,10 @@
 
 namespace traits
 {
-
 template <class...>
 struct common_type;
 
+/// Helper typedef to access \c common_type member \c type
 template<class... Ts>
 using common_type_t = typename common_type<Ts...>::type;
 
@@ -75,12 +75,38 @@ template<>
 struct common_type<>
 { };
 
-template<class T>
-struct common_type<T>: common_type<T, T>
+/**
+ * @metafunction Determines the common type of T0
+ * @details Determines the type T0 be implicitly converted to. If such type
+ * exists, the member \c type names that type. Otherwise, there is no member
+ * \c type.
+ * @note The rules for determining the common_type can be found at
+ * https://en.cppreference.com/w/cpp/types/common_type
+ * @attention This metafunction mimics the additional functionality of the
+ * future C++20 std::common_type. Upon the release of C++20, this function
+ * should be deprecated.
+ * @attention Specializations for this implementation of common type should be
+ * done inside the library's namespace
+ */
+template<class T0>
+struct common_type<T0>: common_type<T0, T0>
 { };
 
-template<class T, class U>
-struct common_type<T, U>: detail::binary_common_type<T, U>
+/**
+ * @metafunction Determines the common type among T1 and T2
+ * @details Determines the type T1 and T2 can be implicitly converted to. If
+ * such type exists, the member \c type names that type. Otherwise, there is no
+ * member \c type.
+ * @note The rules for determining the common_type can be found at
+ * https://en.cppreference.com/w/cpp/types/common_type
+ * @attention This metafunction mimics the additional functionality of the
+ * future C++20 std::common_type. Upon the release of C++20, this function
+ * should be deprecated.
+ * @attention Specializations for this implementation of common type should be
+ * done inside the library's namespace
+ */
+template<class T1, class T2>
+struct common_type<T1, T2>: detail::binary_common_type<T1, T2>
 { };
 
 namespace detail
@@ -97,6 +123,19 @@ struct multiple_common_type<std::void_t<common_type<T1, T2>>, T1, T2, Rest...>
 
 } // namespace detail
 
+/**
+ * @metafunction Determines the common type among all types Ts...
+ * @details Determines the type all Ts... can be implicitly converted to. If
+ * such type exists, the member \c type names that type. Otherwise, there is no
+ * member \c type.
+ * @note The rules for determining the common_type can be found at
+ * https://en.cppreference.com/w/cpp/types/common_type
+ * @attention This metafunction mimics the additional functionality of the
+ * future C++20 std::common_type. Upon the release of C++20, this function
+ * should be deprecated.
+ * @attention Specializations for this implementation of common type should be
+ * done inside the library's namespace
+ */
 template<class T1, class T2, class... Rest>
 struct common_type<T1, T2, Rest...>:
     detail::multiple_common_type<void, T1, T2, Rest...>
@@ -104,4 +143,4 @@ struct common_type<T1, T2, Rest...>:
 
 } // namespace traits
 
-#endif //IMPL_DETAIL_COMMON_TYPE_H
+#endif //DETAIL_COMMON_TYPE_H

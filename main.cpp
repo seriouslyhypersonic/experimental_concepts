@@ -15,9 +15,6 @@
 
 int main()
 {
-    static_assert(std::is_same_v<traits::common_type<int, double, float>::type, double>);
-    static_assert(std::is_same_v<traits::rref<int&>::type, int&&>);
-
     std::cout << "All tests succeeded!\n";
 
     return 0;
