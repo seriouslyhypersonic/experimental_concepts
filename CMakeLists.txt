@@ -1,16 +1,27 @@
 cmake_minimum_required(VERSION 3.13)
-project(experimental_concepts)
+
+project(experimental_concepts
+        VERSION 0.1
+        DESCRIPTION "C++17 experimental implementation of C++20 concepts"
+        LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(experimental_concepts
+# Create an INTERFACE library
+add_library(conceptslib INTERFACE)
+
+# Specify target_sources: show headers in the IDE
+target_sources(conceptslib INTERFACE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/detail/common_reference.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/detail/common_type.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/detail/type_traits.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/concepts.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/type_traits.hpp)
+
+target_include_directories(conceptslib INTERFACE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+add_executable(concepts_test
         main.cpp
-        experimental_concepts.hpp
-        non_std_numerics.hpp
-        universal_references.hpp
-        tests/test_types.hpp
-        requires_expression.hpp
-        experimental_type_traits.hpp
-        common_reference.hpp
-        tests/test_type_traits.hpp
-        common_type.hpp)
+        tests/test_type_traits.hpp)
+target_link_libraries(concepts_test conceptslib)

@@ -12,13 +12,13 @@
  *                  - License    : BSL-1.0
  */
 
-#ifndef COMMON_TYPE_H
-#define COMMON_TYPE_H
+#ifndef IMPL_DETAIL_COMMON_TYPE_H
+#define IMPL_DETAIL_COMMON_TYPE_H
 
 #include <type_traits>
 
-#include "experimental_type_traits.hpp"
-#include "common_reference.hpp"
+#include <conceptslib/detail/type_traits.hpp>
+#include <conceptslib/detail/common_reference.hpp>
 
 template <class...>
 struct common_type;
@@ -99,4 +99,4 @@ struct common_type<T1, T2, Rest...>:
     detail::multiple_common_type<T1, T2, Rest...>
 { };
 
-#endif //COMMON_TYPE_H
+#endif //IMPL_DETAIL_COMMON_TYPE_H

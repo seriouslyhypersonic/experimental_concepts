@@ -6,15 +6,15 @@
  * http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef EXPERIMENTAL_CONCEPTS_H
-#define EXPERIMENTAL_CONCEPTS_H
+#ifndef CONCEPTS_H
+#define CONCEPTS_H
 
 #define EXP_CONCEPT constexpr bool
 
 #include <experimental/type_traits>
 #include <type_traits>
 
-#include "experimental_type_traits.hpp"
+#include <conceptslib/impl/type_traits.hpp>
 
 /**
  * @file experimental_concepts
@@ -446,4 +446,4 @@ EXP_CONCEPT EqualityComparableWith =
 } // namespace concepts
 
 
-#endif //EXPERIMENTAL_CONCEPTS_H
+#endif //CONCEPTS_H

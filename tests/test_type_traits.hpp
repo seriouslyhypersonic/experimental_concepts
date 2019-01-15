@@ -15,9 +15,9 @@
 #ifndef TEST_TYPE_TRAITS_H
 #define TEST_TYPE_TRAITS_H
 
-#include "../experimental_type_traits.hpp"
-#include "../common_type.hpp"
-#include "../common_reference.hpp"
+#include <conceptslib/type_traits.hpp>
+
+#include "test_type_traits.hpp"
 
 // TESTS
 
