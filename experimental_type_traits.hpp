@@ -1,7 +1,16 @@
+/*
+ * Copyright Nuno Alves de Sousa 2019
+ *
+ * Use, modification and distribution is subject to the Boost Software License,
+ * Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+ * http://www.boost.org/LICENSE_1_0.txt)
+ */
+
 #ifndef EXPERIMENTAL_TYPE_TRAITS_H
 #define EXPERIMENTAL_TYPE_TRAITS_H
 
 #include <type_traits>
+#include <experimental/type_traits>
 
 /**
  * @file experimental_type_traits.hpp
@@ -70,23 +79,25 @@ namespace traits
 
 using std::declval;
 
-// --- metafunction remove_cvref
+/* --- Metafunction remove_cvref --- */
 /**
  *  @metafunction Remove topmost cv-qualifiers of T or of the type refered by it
  *  @details If the type T is a reference type, provides the member typedef
  *  \c type which is the type referred to by T with its topmost cv-qualifiers
  *  removed. Otherwise type is T with its topmost cv-qualifiers removed.
+ *  @note Same implementation of future std::remove_cvref (C++20)
  */
 template<class T>
 struct remove_cvref
 {
     using type = std::remove_cv_t<std::remove_reference_t<T>>;
 };
-/// Helper typedef to access remove_cvref member typedef type
+
+/// Helper typedef to access remove_cvref member typedef \c type
 template<class T>
 using remove_cvref_t = typename remove_cvref<T>::type;
 
-//--- metafunction copy_cv
+/* --- Metafunction copy_cv --- */
 namespace detail
 {
 // Case: From has no cv qualifiers
@@ -105,15 +116,59 @@ struct copy_cv <const volatile From, To>: std::add_cv<To> { };
 /**
  * @metafunctiion Copy cv qualifiers from type From to type To
  * @details Provides a member typedef \c type which is the same as T, except
- * the qualifiers from type From are added to type To.
+ * the qualifiers from type From are added to type To (unless T is a function,
+ * a reference, or already has this cv-qualifier)
  */
 template<class From, class To>
 using copy_cv = detail::copy_cv<From, To>;
+
 /// Helper typedef to access the member \c type of copy_cv
 template<class From, class To>
 using copy_cv_t = typename copy_cv<From, To>::type;
 
-// --- metafunction select
+/* --- metafunction cref --- */
+/**
+ * @metafunction Create a const lvalue reference from the underlying type of T.
+ * @details If T is a reference type, provides the member typedef \c type which
+ * is a const lvalue reference to the type referred to by T. Otherwise, the
+ * member typedef \c type is a const lvalue reference to type T.
+ * @note 1 - volatile qualifier is carried over to the const lvalue reference.
+ * @note 2 - reference collapse rules are \b not honored.
+ * @note 3 - unlike std::add_rvalue_reference, rref is guaranteed to generate
+ * a (possibly volatile) const lvalue reference.
+ */
+template<class T>
+struct cref
+{
+    using type = std::add_lvalue_reference_t<const std::remove_reference_t<T>>;
+};
+
+/// Helper typedef to access cref member typedef \c type
+template<class T>
+using cref_t = typename cref<T>::type;
+
+/* --- metafunction rref --- */ //todo: check this is equivalent to rref_res
+/**
+ * @metafunction Create a rvalue reference from the underlying type of T.
+ * @details If T is a reference type, provides the member typedef \c type which
+ * is an rvalue reference to the type referred to by T. Otherwise, the member
+ * typedef \c type is an rvalue reference to T.
+ * @note 1 - cv qualifiers are carried over to the rvalue reference.
+ * @note 2 - reference collapse rules are \b not honored.
+ * @note 3 - unlike std::add_rvalue_reference, rref is guaranteed to generate
+ * a (possible cv qualified) rvalue reference.
+ */
+template <class T>
+struct rref
+{
+    using type = std::remove_reference_t<T>&&;
+};
+
+/// Helper typedef to access rref member \c type
+template <class T>
+using rref_t = typename rref<T>::type;
+
+/* --- Metafunction select --- */
 /**
  * \c condition is a wrapper for the \c select metafunction. It wraps the result
  * of a test, and the associated type of that test. It provides a member
@@ -161,7 +216,7 @@ struct select<condition<B, T>>
     using type = T;
 };
 
-/// Helper typedef to access the member \c type of \c select
+/// Helper typedef to access \c select member \c type
 template<class Head, class... Tail>
 using select_t = typename select<Head, Tail...>::type;
 
@@ -181,9 +236,14 @@ using has_type_imp = typename T::type;
 template<class T>
 struct has_type: std::bool_constant<is_detected_v<detail::has_type_imp, T>> {};
 
-/// Helper variable template to access the member \c value of \c has_type
+/// Helper variable template to access \c has_type member \c value
 template<class T>
 inline constexpr bool has_type_v = has_type<T>::value;
+
+
+
+
+
 
 // --- EXPERIMENTAL IMPLEMENTATION OF common_reference !-!-!-!-!-!-!-!-!-!
 // https://ericniebler.github.io/std/wg21/D0022.html#appendix-1-reference-implementations-of-common_type-and-common_reference
@@ -329,80 +389,12 @@ namespace experimental
 
 
 // TESTS FOR EXPERIMENTAL IMPLEMENTATION ---------------------------------------
-struct WithType { using type = void; };
-struct WithoutType { };
 
-//Test trait has_type
-static_assert(has_type<WithType>::value);
-static_assert(!has_type<WithoutType>::value);
 
-// Test copy_cv
-using Cint = const int;
-using Vint = volatile int;
-using CVint = const volatile int;
 
-using Cvoid = const void;
-using CVvoid = const volatile void;
 
-static_assert(std::is_same_v<copy_cv_t<int, int>, int>);
-static_assert(std::is_same_v<copy_cv_t<Cint, int>, Cint>);
-static_assert(std::is_same_v<copy_cv_t<CVint, int>, CVint>);
 
-// Permutation
-static_assert(std::is_same_v<copy_cv_t<int, Cint>, Cint>);
-static_assert(std::is_same_v<copy_cv_t<int, Vint>, Vint>);
-static_assert(std::is_same_v<copy_cv_t<int, CVint>, CVint>);
 
-// Using void
-static_assert(std::is_same_v<copy_cv_t<void, int>, int>);
-static_assert(std::is_same_v<copy_cv_t<Cvoid, int>, Cint>);
-static_assert(std::is_same_v<copy_cv_t<CVvoid, int>, CVint>);
-
-// Test select
-struct TypeA {};
-struct TypeB {};
-struct TypeC {};
-struct TypeD {};
-struct TypeE {};
-
-using expectA =
-    select_t<condition<true, TypeA>
-            ,condition<true, TypeB>
-            ,condition<false, TypeC>>;
-
-using expectB =
-    select_t<condition<false, TypeA>
-            ,condition<true, TypeB>
-            ,condition<true, TypeC>>;
-
-using expectC =
-    select_t<condition<false, TypeA>
-            ,condition<false, TypeB>
-            ,condition<true, TypeC>>;
-
-using expectD =
-    select_t<condition<false, TypeA>
-            ,condition<false, TypeB>
-            ,condition<false, TypeC>
-            ,TypeD>;
-
-// Error - only last element can be a non condition type
-//using expectError =
-//    select_t<condition<false, TypeA>
-//            ,condition<false, TypeB>
-//            ,TypeE
-//            ,TypeC>;
-
-// Error - no true condition
-//using expectError =
-//    select_t<condition<false, TypeA>
-//            ,condition<false, TypeB>
-//            ,condition<false, TypeC>>;
-
-static_assert(std::is_same_v<expectA, TypeA>);
-static_assert(std::is_same_v<expectB, TypeB>);
-static_assert(std::is_same_v<expectC, TypeC>);
-static_assert(std::is_same_v<expectD, TypeD>);
 
 // Test __builtin_common
 
