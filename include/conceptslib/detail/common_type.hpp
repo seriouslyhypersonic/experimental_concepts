@@ -20,6 +20,9 @@
 #include <conceptslib/detail/type_traits.hpp>
 #include <conceptslib/detail/common_reference.hpp>
 
+namespace traits
+{
+
 template <class...>
 struct common_type;
 
@@ -96,7 +99,9 @@ struct multiple_common_type<std::void_t<common_type<T1, T2>>, T1, T2, Rest...>
 
 template<class T1, class T2, class... Rest>
 struct common_type<T1, T2, Rest...>:
-    detail::multiple_common_type<T1, T2, Rest...>
+    detail::multiple_common_type<void, T1, T2, Rest...>
 { };
+
+} // namespace traits
 
 #endif //IMPL_DETAIL_COMMON_TYPE_H

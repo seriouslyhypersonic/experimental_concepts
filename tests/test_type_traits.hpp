@@ -145,7 +145,7 @@ static_assert(std::is_same_v<rref_t<volatile int&&>, volatile int&&>);
 static_assert(std::is_same_v<rref_t<const volatile int&&>, const volatile int&&>);
 
 /* --- Test metafunction xref --- */
-using detail::xref;
+using traits::detail::xref;
 static_assert(std::is_same_v<xref<double>::type<int>, int>);
 static_assert(std::is_same_v<xref<double>::type<int&>, int&>);
 static_assert(std::is_same_v<xref<double>::type<int&&>, int&&>);
@@ -199,6 +199,7 @@ static_assert(std::is_same_v<xref<double&&>::type<const int& >, const int&>);
 static_assert(std::is_same_v<xref<double&&>::type<const int&&>, const int&&>);
 
 /* --- Test metafunction common_reference --- */
+using traits::common_reference_t;
 struct B {};
 struct D : B {};
 
@@ -236,6 +237,7 @@ static_assert(std::is_same_v<common_reference_t<int                &&
                                                ,int volatile &       >, int const volatile &>);
 
 /* Test metafunction common_type --- */
+using traits::common_type_t;
 // No implicit conversion
 struct X {};
 struct Y {};
@@ -253,17 +255,20 @@ namespace std
 
 static_assert(std::is_same_v<std::common_type_t<X, Y>, Z>);
 static_assert(std::is_same_v<std::common_type_t<Y, X>, Z>);
-static_assert(!is_detected_v<std::common_type_t, X, W>);
+static_assert(!traits::is_detected_v<std::common_type_t, X, W>);
 
+namespace traits
+{
 template<>
 struct common_type<X, Y> { using type = Z; };
 
 template<>
 struct common_type<Y, X> { using type = Z; };
+}
 
 static_assert(std::is_same_v<common_type_t<X, Y>, Z>);
 static_assert(std::is_same_v<common_type_t<Y, X>, Z>);
-static_assert(!is_detected_v<common_type_t, X, W>);
+static_assert(!traits::is_detected_v<common_type_t, X, W>);
 
 
 #endif //TEST_TYPE_TRAITS_H

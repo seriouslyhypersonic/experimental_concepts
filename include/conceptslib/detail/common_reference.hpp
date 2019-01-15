@@ -20,13 +20,14 @@
 
 #include <conceptslib/detail/type_traits.hpp>
 
+namespace traits
+{
+
 template <typename ...>
 struct common_type;
 
 namespace detail
 {
-using traits::copy_cv_t;
-using traits::rref_t;
 
 // req for builtin common between return values of T and U returning functions
 template<class T, class U>
@@ -259,5 +260,7 @@ template<class T1, class T2, class... Rest>
 struct common_reference<T1, T2, Rest...>
     : detail::multiple_common_reference<void, T1, T2, Rest...>
 { };
+
+} // namespace traits
 
 #endif //IMPL_DETAIL_COMMON_REFERENCE_H

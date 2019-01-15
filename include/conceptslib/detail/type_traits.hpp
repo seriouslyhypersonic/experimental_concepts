@@ -20,6 +20,8 @@
  *  - https://www.youtube.com/watch?v=o1ekBpEFcPc
  *
  */
+namespace traits
+{
 
 /* --- Detection idiom --- */
 
@@ -71,9 +73,6 @@ std::experimental::is_detected_convertible<To, Op, Args...>;
 template <class To, template<class...> class Op, class... Args>
 constexpr bool is_detected_convertible_v =
                std::experimental::is_detected_convertible_v<To, Op, Args...>;
-
-namespace traits
-{
 
 // METAFUNCTIONS
 

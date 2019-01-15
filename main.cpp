@@ -7,12 +7,17 @@
  */
 
 #include <iostream>
+#include <type_traits>
 
+#include <conceptslib/type_traits.hpp>
 
 #include "tests/test_type_traits.hpp"
 
 int main()
 {
+    static_assert(std::is_same_v<traits::common_type<int, double, float>::type, double>);
+    static_assert(std::is_same_v<traits::rref<int&>::type, int&&>);
+
     std::cout << "All tests succeeded!\n";
 
     return 0;
