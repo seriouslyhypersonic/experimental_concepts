@@ -129,10 +129,10 @@ static_assert(std::is_same_v<clref_t<const volatile int&&>, const volatile int&>
 
 /* --- Test metafunction rref --- */
 using traits::rref_t;
-static_assert(std::is_same_v<rref_t<int>, int&&>);
-static_assert(std::is_same_v<rref_t<const int>, const int&&>);
-static_assert(std::is_same_v<rref_t<volatile int>, volatile int&&>);
-static_assert(std::is_same_v<rref_t<const volatile int>, const volatile int&&>);
+static_assert(std::is_same_v<rref_t<int>, int>);
+static_assert(std::is_same_v<rref_t<const int>, const int>);
+static_assert(std::is_same_v<rref_t<volatile int>, volatile int>);
+static_assert(std::is_same_v<rref_t<const volatile int>, const volatile int>);
 
 static_assert(std::is_same_v<rref_t<int&>, int&&>);
 static_assert(std::is_same_v<rref_t<const int&>, const int&&>);

@@ -136,17 +136,23 @@ using clref_t = typename clref<T>::type;
 
 /* --- metafunction rref --- */ //todo: check this is equivalent to rref_res
 /**
- * @metafunction Create a rvalue reference from the underlying type of T.
- * @details If T is a reference type, provides the member typedef \c type which
- * is an rvalue reference to the type referred to by T. Otherwise, the member
- * typedef \c type is an rvalue reference to T.
+ * @metafunction Create an rvalue reference from a reference type T.
+ * @details If T is a reference type, provides the member typedef
+ * \c type which is an rvalue reference to the type referred to by T.
+ * Otherwise, the member typedef \c type is T.
  * @note 1 - cv qualifiers are carried over to the rvalue reference.
  * @note 2 - reference collapse rules are \b not honored.
- * @note 3 - unlike std::add_rvalue_reference, rref is guaranteed to generate
- * a (possible cv qualified) rvalue reference.
+ * @note 3 - unlike std::add_rvalue_reference, rref generates object types, if
+ * T is also an object type.
  */
 template <class T>
 struct rref
+{
+    using type = T;
+};
+
+template<class T>
+struct rref<T&>
 {
     using type = std::remove_reference_t<T>&&;
 };
