@@ -113,54 +113,6 @@ using copy_cv = detail::copy_cv<From, To>;
 template<class From, class To>
 using copy_cv_t = typename copy_cv<From, To>::type;
 
-/* --- metafunction clref --- */
-/**
- * @metafunction Create a const lvalue reference from the underlying type of T.
- * @details If T is a reference type, provides the member typedef \c type which
- * is a const lvalue reference to the type referred to by T. Otherwise, the
- * member typedef \c type is a const lvalue reference to type T.
- * @note 1 - volatile qualifier is carried over to the const lvalue reference.
- * @note 2 - reference collapse rules are \b not honored.
- * @note 3 - unlike std::add_rvalue_reference, clref is guaranteed to generate
- * a (possibly volatile) const lvalue reference.
- */
-template<class T>
-struct clref
-{
-    using type = std::add_lvalue_reference_t<const std::remove_reference_t<T>>;
-};
-
-/// Helper typedef to access clref member typedef \c type
-template<class T>
-using clref_t = typename clref<T>::type;
-
-/* --- metafunction rref --- */ //todo: check this is equivalent to rref_res
-/**
- * @metafunction Create an rvalue reference from a reference type T.
- * @details If T is a reference type, provides the member typedef
- * \c type which is an rvalue reference to the type referred to by T.
- * Otherwise, the member typedef \c type is T.
- * @note 1 - cv qualifiers are carried over to the rvalue reference.
- * @note 2 - reference collapse rules are \b not honored.
- * @note 3 - unlike std::add_rvalue_reference, rref generates object types, if
- * T is also an object type.
- */
-template <class T>
-struct rref
-{
-    using type = T;
-};
-
-template<class T>
-struct rref<T&>
-{
-    using type = std::remove_reference_t<T>&&;
-};
-
-/// Helper typedef to access rref member \c type
-template <class T>
-using rref_t = typename rref<T>::type;
-
 /* --- Metafunction select --- */
 /**
  * \c condition is a wrapper for the \c select metafunction. It wraps the result
@@ -179,7 +131,6 @@ struct condition
 
 /**
  * @metafunction Conditionally select a type.
- *
  * @details Selects a type based on the result of a set of conditions. Each
  * condition is associated with the result of a test, and a type. Conditions
  * are provided using the \c condition wrapper. A default type may be provided

@@ -114,7 +114,7 @@ static_assert(traits::has_type<WithType>::value);
 static_assert(!traits::has_type<WithoutType>::value);
 
 /* --- Test metafunction clref --- */
-using traits::clref_t;
+using traits::detail::clref_t;
 static_assert(std::is_same_v<clref_t<int>, const int&>);
 static_assert(std::is_same_v<clref_t<const int>, const int&>);
 static_assert(std::is_same_v<clref_t<const volatile int>, const volatile int&>);
@@ -128,7 +128,7 @@ static_assert(std::is_same_v<clref_t<const int&&>, const int&>);
 static_assert(std::is_same_v<clref_t<const volatile int&&>, const volatile int&>);
 
 /* --- Test metafunction rref --- */
-using traits::rref_t;
+using traits::detail::rref_t;
 static_assert(std::is_same_v<rref_t<int>, int>);
 static_assert(std::is_same_v<rref_t<const int>, const int>);
 static_assert(std::is_same_v<rref_t<volatile int>, volatile int>);

@@ -28,6 +28,29 @@ struct common_type;
 
 namespace detail
 {
+/* --- metafunction clref --- */
+// Create a const lvalue reference from the underlying type of T.
+template<class T>
+using clref_t = std::add_lvalue_reference_t<const std::remove_reference_t<T>>;
+
+
+/* --- metafunction rref --- */
+// Create an rvalue reference from a reference type T. If T is not reference
+// type, the member typedef type is T.
+template <class T>
+struct rref
+{
+    using type = T;
+};
+
+template<class T>
+struct rref<T&>
+{
+    using type = std::remove_reference_t<T>&&;
+};
+
+template <class T>
+using rref_t = typename rref<T>::type;
 
 // req for builtin common between return values of T and U returning functions
 template<class T, class U>
