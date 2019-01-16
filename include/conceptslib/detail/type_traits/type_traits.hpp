@@ -14,10 +14,9 @@
 
 namespace traits
 {
-
 /* --- Detection idiom --- */
 
-/* Aliases to introduce detection essentials into the global namespace */
+/* Aliases to introduce detection essentials into the traits namespace */
 
 /// Alias for true_type if Op<Args...> is valid. Otherwise alias for false_type.
 template<template<class...> class Op, class... Args>
@@ -39,7 +38,7 @@ using detected_t = std::experimental::detected_t<Op, Args...>;
 template< class Default, template<class...> class Op, class... Args>
 using detected_or = std::experimental::detected_or<Default, Op, Args...>;
 
-/* Aliases to introduce additional utilities into the global namespace */
+/* Aliases to introduce additional utilities into the traits namespace */
 
 // Non instantiatable type to indicate detection failure
 using nonesuch = std::experimental::nonesuch;
@@ -89,16 +88,17 @@ namespace detail
 {
 // Case: From has no cv qualifiers
 template<class From, class To>
-struct copy_cv { using type = To; };
+struct copy_cv_imp { using type = To; };
 //Case: From has const qualifier
 template<class From, class To>
-struct copy_cv <const From, To>: std::add_const<To> { };
+struct copy_cv_imp <const From, To>: std::add_const<To> { };
 // Case: From has volatile qualifier
 template<class From, class To>
-struct copy_cv <volatile From, To>: std::add_volatile<To> { };
+struct copy_cv_imp <volatile From, To>: std::add_volatile<To> { };
 // Case: From has const volatile qualifier
 template<class From, class To>
-struct copy_cv <const volatile From, To>: std::add_cv<To> { };
+struct copy_cv_imp <const volatile From, To>: std::add_cv<To> { };
+
 } // namespace detail
 /**
  * @metafunctiion Copy cv qualifiers from type From to type To
@@ -107,7 +107,7 @@ struct copy_cv <const volatile From, To>: std::add_cv<To> { };
  * a reference, or already has this cv-qualifier)
  */
 template<class From, class To>
-using copy_cv = detail::copy_cv<From, To>;
+using copy_cv = detail::copy_cv_imp<From, To>;
 
 /// Helper typedef to access the member \c type of copy_cv
 template<class From, class To>
@@ -163,8 +163,6 @@ struct select<condition<B, T>>
 /// Helper typedef to access \c select member \c type
 template<class Head, class... Tail>
 using select_t = typename select<Head, Tail...>::type;
-
-// TRAITS
 
 // --- trait has_type
 namespace detail

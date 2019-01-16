@@ -10,11 +10,23 @@
 #include <type_traits>
 
 #include <conceptslib/type_traits.hpp>
+#include <conceptslib/detail/concepts/core.hpp>
 
 #include "tests/test_type_traits.hpp"
 
+REQUIREMENT Req1
+{
+    template<class T>
+    auto REQUIRES(T t) -> decltype(concepts::detail::valid_expr(
+    concepts::detail::valid_if<concepts::Same<decltype(t.type), int>>()
+    ));
+};
+
+struct A { int type; };
+
 int main()
 {
+    static_assert(concepts::requires_<Req1, A>);
     std::cout << "All tests succeeded!\n";
 
     return 0;

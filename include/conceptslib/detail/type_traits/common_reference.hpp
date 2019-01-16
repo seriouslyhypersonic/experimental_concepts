@@ -18,7 +18,7 @@
 #include <utility>
 #include <type_traits>
 
-#include <conceptslib/detail/type_traits.hpp>
+#include <conceptslib/detail/type_traits/type_traits.hpp>
 
 namespace traits
 {
@@ -28,7 +28,6 @@ struct common_type;
 
 namespace detail
 {
-
 // Create a const lvalue reference from the underlying type of T.
 template<class T>
 using clref_t = std::add_lvalue_reference_t<const std::remove_reference_t<T>>;
@@ -223,7 +222,6 @@ struct common_reference<T0>
 
 namespace detail
 {
-
 // common_reference: case T and U ref types and exists simple common reference
 template<class T, class U>
 constexpr bool has_simple_common_ref_v =
@@ -292,7 +290,6 @@ struct common_reference<T1, T2>: detail::binary_common_ref<T1, T2>
 
 namespace detail
 {
-
 // base case: no common_reference
 template<class Void, class T1, class T2, class... Rest>
 struct multiple_common_reference

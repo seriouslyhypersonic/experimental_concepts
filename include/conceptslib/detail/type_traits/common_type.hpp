@@ -17,8 +17,8 @@
 
 #include <type_traits>
 
-#include <conceptslib/detail/type_traits.hpp>
-#include <conceptslib/detail/common_reference.hpp>
+#include <conceptslib/detail/type_traits/type_traits.hpp>
+#include <conceptslib/detail/type_traits/common_reference.hpp>
 
 namespace traits
 {
@@ -31,7 +31,6 @@ using common_type_t = typename common_type<Ts...>::type;
 
 namespace detail
 {
-
 template<class T, class U>
 constexpr bool same_decayed_v =
     std::is_same_v<T, std::decay_t<T>> &&
@@ -109,7 +108,6 @@ struct common_type<T1, T2>: detail::binary_common_type<T1, T2>
 
 namespace detail
 {
-
 template<class Void, typename...>
 struct multiple_common_type
 { };

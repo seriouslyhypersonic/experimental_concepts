@@ -5,9 +5,9 @@
 #ifndef TYPE_TRAITS_H
 #define TYPE_TRAITS_H
 
-#include <conceptslib/detail/common_reference.hpp>
-#include <conceptslib/detail/common_type.hpp>
-#include <conceptslib/detail/type_traits.hpp>
+#include <conceptslib/detail/type_traits/common_reference.hpp>
+#include <conceptslib/detail/type_traits/common_type.hpp>
+#include <conceptslib/detail/type_traits/type_traits.hpp>
 
 
 #endif //TYPE_TRAITS_H

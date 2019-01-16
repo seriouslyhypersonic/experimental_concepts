@@ -12,10 +12,11 @@ add_library(conceptslib INTERFACE)
 
 # Specify target_sources: show headers in the IDE
 target_sources(conceptslib INTERFACE
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/detail/common_reference.hpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/detail/common_type.hpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/detail/type_traits.hpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/concepts.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/detail/type_traits/common_reference.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/detail/type_traits/common_type.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/detail/type_traits/type_traits.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/detail/concepts/concepts.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/detail/concepts/core.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/type_traits.hpp)
 
 target_include_directories(conceptslib INTERFACE
@@ -25,6 +26,12 @@ target_include_directories(conceptslib INTERFACE
 add_executable(concepts_test
         main.cpp
         tests/test_type_traits.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/detail/type_traits/common_reference.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/detail/type_traits/common_type.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/detail/type_traits/type_traits.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/detail/concepts/concepts.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/detail/concepts/core.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/type_traits.hpp
         )
 
 target_link_libraries(concepts_test conceptslib)
