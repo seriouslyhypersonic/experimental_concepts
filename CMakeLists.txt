@@ -24,6 +24,7 @@ target_include_directories(conceptslib INTERFACE
 
 add_executable(concepts_test
         main.cpp
-        tests/test_type_traits.hpp)
+        tests/test_type_traits.hpp
+        )
 
 target_link_libraries(concepts_test conceptslib)

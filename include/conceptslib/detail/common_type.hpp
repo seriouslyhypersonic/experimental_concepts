@@ -59,14 +59,14 @@ struct binary_common_type<
     using type = ternary_return_t<T, U>;
 };
 
-using traits::cref_t;
+using traits::clref_t;
 template<class T, class U>
 struct binary_common_type<
     T, U, std::enable_if_t<same_decayed_v<T, U> &&
                            !is_detected_v<ternary_return_t, T, U> &&
-                           is_detected_v<cond_res_t, cref_t<T> ,cref_t<U>>>>
+                           is_detected_v<cond_res_t, clref_t<T> ,clref_t<U>>>>
 {
-    using type = std::decay_t<cond_res_t<cref_t<T>, cref_t<U>>>;
+    using type = std::decay_t<cond_res_t<clref_t<T>, clref_t<U>>>;
 };
 
 } // namespace detail

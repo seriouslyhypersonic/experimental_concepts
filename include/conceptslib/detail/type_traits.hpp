@@ -1,5 +1,5 @@
 /*
- * Copyright Nuno Alves de Sousa 2019
+ * Copyright (c) Nuno Alves de Sousa 2019
  *
  * Use, modification and distribution is subject to the Boost Software License,
  * Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,14 +12,6 @@
 #include <type_traits>
 #include <experimental/type_traits>
 
-/**
- * @file type_traits.hpp
- *
- * Resources:
- *  - https://en.cppreference.com/w/cpp/experimental/is_detected
- *  - https://www.youtube.com/watch?v=o1ekBpEFcPc
- *
- */
 namespace traits
 {
 
@@ -121,7 +113,7 @@ using copy_cv = detail::copy_cv<From, To>;
 template<class From, class To>
 using copy_cv_t = typename copy_cv<From, To>::type;
 
-/* --- metafunction cref --- */
+/* --- metafunction clref --- */
 /**
  * @metafunction Create a const lvalue reference from the underlying type of T.
  * @details If T is a reference type, provides the member typedef \c type which
@@ -129,18 +121,18 @@ using copy_cv_t = typename copy_cv<From, To>::type;
  * member typedef \c type is a const lvalue reference to type T.
  * @note 1 - volatile qualifier is carried over to the const lvalue reference.
  * @note 2 - reference collapse rules are \b not honored.
- * @note 3 - unlike std::add_rvalue_reference, rref is guaranteed to generate
+ * @note 3 - unlike std::add_rvalue_reference, clref is guaranteed to generate
  * a (possibly volatile) const lvalue reference.
  */
 template<class T>
-struct cref
+struct clref
 {
     using type = std::add_lvalue_reference_t<const std::remove_reference_t<T>>;
 };
 
-/// Helper typedef to access cref member typedef \c type
+/// Helper typedef to access clref member typedef \c type
 template<class T>
-using cref_t = typename cref<T>::type;
+using clref_t = typename clref<T>::type;
 
 /* --- metafunction rref --- */ //todo: check this is equivalent to rref_res
 /**

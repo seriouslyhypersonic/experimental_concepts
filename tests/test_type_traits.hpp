@@ -1,5 +1,5 @@
 /*
- * Copyright Nuno Alves de Sousa 2019
+ * Copyright (c) Nuno Alves de Sousa 2019
  *
  * Use, modification and distribution is subject to the Boost Software License,
  * Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
@@ -113,19 +113,19 @@ struct WithoutType { };
 static_assert(traits::has_type<WithType>::value);
 static_assert(!traits::has_type<WithoutType>::value);
 
-/* --- Test metafunction cref --- */
-using traits::cref_t;
-static_assert(std::is_same_v<cref_t<int>, const int&>);
-static_assert(std::is_same_v<cref_t<const int>, const int&>);
-static_assert(std::is_same_v<cref_t<const volatile int>, const volatile int&>);
+/* --- Test metafunction clref --- */
+using traits::clref_t;
+static_assert(std::is_same_v<clref_t<int>, const int&>);
+static_assert(std::is_same_v<clref_t<const int>, const int&>);
+static_assert(std::is_same_v<clref_t<const volatile int>, const volatile int&>);
 
-static_assert(std::is_same_v<cref_t<int&>, const int&>);
-static_assert(std::is_same_v<cref_t<const int&>, const int&>);
-static_assert(std::is_same_v<cref_t<const volatile int&>, const volatile int&>);
+static_assert(std::is_same_v<clref_t<int&>, const int&>);
+static_assert(std::is_same_v<clref_t<const int&>, const int&>);
+static_assert(std::is_same_v<clref_t<const volatile int&>, const volatile int&>);
 
-static_assert(std::is_same_v<cref_t<int&&>, const int&>);
-static_assert(std::is_same_v<cref_t<const int&&>, const int&>);
-static_assert(std::is_same_v<cref_t<const volatile int&&>, const volatile int&>);
+static_assert(std::is_same_v<clref_t<int&&>, const int&>);
+static_assert(std::is_same_v<clref_t<const int&&>, const int&>);
+static_assert(std::is_same_v<clref_t<const volatile int&&>, const volatile int&>);
 
 /* --- Test metafunction rref --- */
 using traits::rref_t;
