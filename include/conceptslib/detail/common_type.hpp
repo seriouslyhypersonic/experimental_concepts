@@ -83,10 +83,9 @@ struct common_type<>
  * @note The rules for determining the common_type can be found at
  * https://en.cppreference.com/w/cpp/types/common_type
  * @attention This metafunction mimics the additional functionality of the
- * future C++20 std::common_type. Upon the release of C++20, this function
- * should be deprecated.
- * @attention Specializations for this implementation of common type should be
- * done inside the library's namespace
+ * future C++20 \c std::common_type.
+ * @attention Specializations for this implementation of \c common_type
+ * should be done inside the library's namespace
  */
 template<class T0>
 struct common_type<T0>: common_type<T0, T0>
@@ -100,10 +99,9 @@ struct common_type<T0>: common_type<T0, T0>
  * @note The rules for determining the common_type can be found at
  * https://en.cppreference.com/w/cpp/types/common_type
  * @attention This metafunction mimics the additional functionality of the
- * future C++20 std::common_type. Upon the release of C++20, this function
- * should be deprecated.
- * @attention Specializations for this implementation of common type should be
- * done inside the library's namespace
+ * future C++20 \c std::common_type.
+ * @attention Specializations for this implementation of \c common_type
+ * should be done inside the library's namespace
  */
 template<class T1, class T2>
 struct common_type<T1, T2>: detail::binary_common_type<T1, T2>
@@ -131,10 +129,9 @@ struct multiple_common_type<std::void_t<common_type<T1, T2>>, T1, T2, Rest...>
  * @note The rules for determining the common_type can be found at
  * https://en.cppreference.com/w/cpp/types/common_type
  * @attention This metafunction mimics the additional functionality of the
- * future C++20 std::common_type. Upon the release of C++20, this function
- * should be deprecated.
- * @attention Specializations for this implementation of common type should be
- * done inside the library's namespace
+ * future C++20 \c std::common_type.
+ * @attention Specializations for this implementation of \c common_type
+ * should be done inside the library's namespace
  */
 template<class T1, class T2, class... Rest>
 struct common_type<T1, T2, Rest...>:

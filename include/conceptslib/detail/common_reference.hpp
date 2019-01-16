@@ -28,15 +28,12 @@ struct common_type;
 
 namespace detail
 {
-/* --- metafunction clref --- */
+
 // Create a const lvalue reference from the underlying type of T.
 template<class T>
 using clref_t = std::add_lvalue_reference_t<const std::remove_reference_t<T>>;
 
-
-/* --- metafunction rref --- */
-// Create an rvalue reference from a reference type T. If T is not reference
-// type, the member typedef type is T.
+// Create an rvalue reference from a reference type T. Otherwise, use T.
 template <class T>
 struct rref
 {
@@ -117,7 +114,6 @@ template<class T, class U>
 using simple_common_reference_t = typename simple_common_reference<T, U>::type;
 
 /* --- Metafunction xref--- */
-
 // xref<A>::type<U> is U with the addition os A's cv and reference qualifiers
 // Depending on A, whatever U is passed to xref<A>::type<U>, will yield type<U>
 // case 1 - A and U not references     -> type<U>: cvab U
@@ -126,7 +122,6 @@ using simple_common_reference_t = typename simple_common_reference<T, U>::type;
 // case 4 - A rvalue ref and U not ref -> type<U>: cvab U&&
 // case 5 - A rvalue ref and U ref     -> type<U>: cvb  U&/&& (collapsed)
 // Note: cvab is the union of cv qualifiers of A and B.
-
 template <class>
 struct xref { template <class U> using type = U; };
 
@@ -179,6 +174,19 @@ struct xref<const volatile A>
 } // namespace detail
 
 /* --- Metafunction basic_common_reference --- */
+/**
+ * @metafunction A program may specialize \c basic_common_reference on the
+ * first two parameters T and U if each is the same as its respective decayed
+ * version and at least one of them depends on a program-defined type.
+ * @details For more details on the specialization requirements, please visit
+ * https://en.cppreference.com/w/cpp/types/common_reference
+ * @attention A program may not specialize basic_common_reference on the third
+ * or fourth parameters, nor may it specialize common_reference itself.
+ * @attention This function mimics the functionality of the future C++20 \c
+ * std::basic_common_reference.
+ * @attention Specializations for this implementation of
+ * \c basic_common_reference should be done inside the library's namespace
+ */
 // basic_common_reference: base case
 template<class T, class U
         ,template<class> class TQual
@@ -204,11 +212,8 @@ struct common_reference<>
  * type as T0.
  * @note The rules for determining the common_reference can be found at
  * https://en.cppreference.com/w/cpp/types/common_reference
- * @attention This function mimics the functionality of the future C++20
- * std::common_type. Upon the release of C++20, this function should be
- * deprecated.
- * @warning The behavior is undefined if any of the types in T... is an
- * incomplete type other than (possibly cv-qualified) void
+ * @attention This function mimics the functionality of the future C++20 \c
+ * std::common_type.
  */
 template<class T0>
 struct common_reference<T0>
@@ -223,7 +228,6 @@ namespace detail
 template<class T, class U>
 constexpr bool has_simple_common_ref_v =
     is_detected_v<simple_common_reference_t, T, U>;
-
 
 template<class T, class U>
 using basic_common_ref_t =
@@ -279,11 +283,8 @@ struct binary_common_ref<T, U
  * there is no member \c type.
  * @note The rules for determining the common_reference can be found at
  * https://en.cppreference.com/w/cpp/types/common_reference
- * @attention This function mimics the functionality of the future C++20
- * std::common_type. Upon the release of C++20, this function should be
- * deprecated.
- * @warning The behavior is undefined if any of the types in T... is an
- * incomplete type other than (possibly cv-qualified) void
+ * @attention This function mimics the functionality of the future C++20 \c
+ * std::common_type.
  */
 template<class T1, class T2>
 struct common_reference<T1, T2>: detail::binary_common_ref<T1, T2>
@@ -312,11 +313,8 @@ struct multiple_common_reference<std::void_t<common_reference_t<T1, T2>>
  * there is no member \c type.
  * @note The rules for determining the common_reference can be found at
  * https://en.cppreference.com/w/cpp/types/common_reference
- * @attention This function mimics the functionality of the future C++20
- * std::common_type. Upon the release of C++20, this function should be
- * deprecated.
- * @warning The behavior is undefined if any of the types in T... is an
- * incomplete type other than (possibly cv-qualified) void
+ * @attention This function mimics the functionality of the future C++20 \c
+ * std::common_type.
  */
 template<class T1, class T2, class... Rest>
 struct common_reference<T1, T2, Rest...>
