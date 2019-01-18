@@ -4,9 +4,6 @@
  * Use, modification and distribution is subject to the Boost Software License,
  * Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
- *
- * Acknowledgments: implementation strategy as suggested by Isabella Muerte
- *                  - GitHub: https://github.com/slurps-mad-rips
  */
 
 #ifndef DETAIL_CONCEPTS_CORE_H
@@ -28,7 +25,6 @@ namespace detail
 {
 template<class T, class U>
 CONCEPT SameHelper = std::is_same_v<T, U>;
-
 } // namespace detail
 /**
  * @concept Specifies that a type is the same as another type
@@ -55,7 +51,6 @@ namespace detail
 // Convert a function call of type Fun = From(&)() to type To
 template<class Fun, class To>
 using ConvertibleToReq = decltype(static_cast<To>(std::declval<Fun>()()));
-
 } // namespace detail
 /**
  * @concept Specifies that a type is implicitly convertible to
@@ -150,9 +145,31 @@ CONCEPT Assignable =
                    ,const std::remove_reference_t<RHS>&> &&
     requires_<detail::AssignableReq, LHS, RHS>;
 
+/* --- Concept Swappable --- */
+/**
+ * @concept Specifies that a type can be swapped
+ * @details Specifies that lvalues of type T are swappable.
+ * @note Standard library concept: core language concept
+ */
+template<class T>
+CONCEPT Swappable = std::is_swappable_v<T>;
 
-
-// ...
+/* --- Concept SwappableWith --- */
+/**
+ * @concept Specifies that two types can be swapped with each other [Incomplete]
+ * @details Specifies that expressions of the type and value category encoded
+ * by T and U are swappable with each other.
+ * @note Standard library concept: core language concept
+ * @todo CommonReference
+ */
+template<class T, class U>
+CONCEPT SwappableWith =
+    std::is_swappable_with_v<T, T> &&
+    std::is_swappable_with_v<U, U> &&
+    CommonReference<const std::remove_reference_t<T>&
+                   ,const std::remove_reference_t<U>&> &&
+    std::is_swappable_with_v<T, U> &&
+    std::is_swappable_with_v<U, T>;
 
 /* --- Concept Destructible --- */
 /**

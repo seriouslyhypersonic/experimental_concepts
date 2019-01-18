@@ -5,8 +5,12 @@
  * Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
  *
- * Acknowledgments: implementation strategy as suggested by Isabella Muerte
+ * Acknowledgments: Implementation strategy as suggested by Isabella Muerte
  *                  - GitHub: https://github.com/slurps-mad-rips
+ *
+ *                  Emulation of requires expression similar to that of Tristan
+ *                  Brindle
+ *                  - GitHub: https://github.com/tcbrindle/NanoRange
  */
 
 #ifndef CONCEPTS_H
@@ -35,6 +39,7 @@ namespace detail
 template<class... Ts>
 void valid_expr(Ts&&...);
 
+// Generate an instantiatable return type if Exp result is true
 template<bool Exp>
 auto valid_if() -> std::enable_if_t<Exp, int>;
 
@@ -137,15 +142,6 @@ template<class T> using allocator_type = typename T::allocator_type;
 /* --- Standard library concepts (tries to model the concepts library ) --- */
 
 /* Core language concepts */
-
-/**
- * @concept Specifies that a type can be swapped
- * @details Specifies that lvalues of type T are swappable.
- * @note Standard library concept: core language concept
- */
-template<class T>
-CONCEPT Swappable = std::is_swappable_v<T>;
-
 /**
  * @concept Specifies that two types can be swapped with each other [Incomplete]
  * @details Specifies that expressions of the type and value category encoded
@@ -153,176 +149,13 @@ CONCEPT Swappable = std::is_swappable_v<T>;
  * @note Standard library concept: core language concept
  * @todo CommonReference
  */
-template<class T, class U>
-CONCEPT SwappableWith = require<
-std::is_swappable_with_v<T, T>,
-std::is_swappable_with_v<U, U>,
-std::is_swappable_with_v<T, U>,
-std::is_swappable_with_v<U, T>
->;
-
-
-
-//template<class T>
-//EXP_CONCEPT CopyConstructible =
-//        require<
-//        MoveConstructible<T>,
-//        Constructible<T, T&>, ConvertibleTo<T&, T>,
-//        Constructible<T, const T&>, ConvertibleTo<const T&, T>,
-//        Constructible<T, const T>, ConvertibleTo<const T, T>
-//        >;
-
-template<class T>
-CONCEPT Pointer = std::is_pointer_v<T>;
-
-/* Object concepts */
-
-/**
- * @concept Specifies that an object of a type can be moved and swapped
- * @details Specifies that T is an object type that can moved (that is, it can
- * be move constructed, move assigned, and lvalues of type T can be swapped)
- * @note Standard library concept: object concept
- */
-//template<class T>
-//EXP_CONCEPT Movable =
-//        require<
-//        std::is_object_v<T>,
-//        MoveConstructible<T>,
-//        Assignable<T&, T>,
-//        Swappable<T>
-//        >;
-
-/**
- * @concept Specifies that an object of a type can be copied, moved, and swapped
- * @details Specifies that T is an Movable object type that can also copied
- * (that is, it supports copy construction and copy assignment).
- * @note Standard library concept: object concept
- */
-//template<class T>
-//EXP_CONCEPT Copyable =
-//        require<
-//        CopyConstructible<T>,
-//        Movable<T>,
-//        Assignable<T&, const T&>
-//        >;
-
-/**
- * @concept Specifies that an object of a type can be copied, moved, swapped,
- * and default constructed
- * @details Specifies that a type is both copyable and default constructible.
- * It is satisfied by types that behave similarly to built-in types like int,
- * except that they need not support comparison with ==.
- * @note Standard library concept: object concept
- */
-//template<class T>
-//EXP_CONCEPT Semiregular =
-//        require<
-//        Copyable<T>,
-//        DefaultConstructible<T>
-//        >;
-
-
-
-/* Comparison concepts */
-
-/**
- * @concept Specifies that a type can be used in Boolean contexts
- * @details Specifies the requirements for a type usable in Boolean contexts.
- * For Boolean to be satisfied, the logical operators must have the usual
- * behavior (including short-circuiting).
- * @note Standard library concept: comparison concept
- */
-//template <class B>
-//EXP_CONCEPT Boolean =
-//        require<
-//        Movable<traits::remove_cvref_t<B>>,
-//        ConvertibleTo<const std::remove_reference_t<B>&, bool>,
-//
-//        exists<ops::negation, B>,
-//        ConvertibleTo<detected_t<ops::negation, B>, bool>,
-//
-//        exists<ops::logical_conjunction, B, const bool>,
-//        Same<detected_t<ops::logical_conjunction, B, const bool>, bool>,
-//
-//        exists<ops::logical_disjuntion, B, const bool>,
-//        Same<detected_t<ops::logical_disjuntion, B, const bool>, bool>,
-//
-//        exists<ops::logical_conjunction, B, B>,
-//        Same<detected_t<ops::logical_conjunction, B, B>, bool>,
-//
-//        exists<ops::logical_conjunction, const bool, B>,
-//        Same<detected_t<ops::logical_conjunction, const bool, B>, bool>,
-//
-//        exists<ops::logical_disjuntion, B, B>,
-//        Same<detected_t<ops::logical_disjuntion, B, B>, bool>,
-//
-//        exists<ops::logical_disjuntion, const bool, B>,
-//        Same<detected_t<ops::logical_disjuntion, const bool, B>, bool>,
-//
-//        exists<ops::equal_to, B, B>,
-//        Same<detected_t<ops::equal_to, B, B>, bool>,
-//
-//        exists<ops::equal_to, B, const bool>,
-//        Same<detected_t<ops::equal_to, B, const bool>, bool>,
-//
-//        exists<ops::equal_to, const bool, B>,
-//        Same<detected_t<ops::equal_to, const bool, B>, bool>,
-//
-//        exists<ops::not_equal_to, B, B>,
-//        Same<detected_t<ops::not_equal_to, B, B>, bool>,
-//
-//        exists<ops::not_equal_to, B, const bool>,
-//        Same<detected_t<ops::not_equal_to, B, const bool>, bool>,
-//
-//        exists<ops::not_equal_to, const bool,  B>,
-//        Same<detected_t<ops::not_equal_to, const bool, B>, bool>
-//        >;
-
-
-//concept EqualityComparable = converts_to<bool, ops::equal_to, T, U>;
-//namespace detail
-//{
 //template<class T, class U>
-//EXP_CONCEPT WeaklyEqualityComparable =
-//        require<
-//        exists<ops::equal_to ,T, U>,
-//        Boolean<detected_t<ops::equal_to, T, U>>,
-//
-//        exists<ops::not_equal_to, T, U>,
-//        Boolean<detected_t<ops::not_equal_to, T, U>>,
-//
-//        exists<ops::equal_to , U, T>,
-//        Boolean<detected_t<ops::equal_to, U, T>>,
-//
-//        exists<ops::not_equal_to, U, T>,
-//        Boolean<detected_t<ops::not_equal_to, U, T>>
-//        >;
-//} // namespace detail
-
-/**
- * @concept Specifies that operator == is an equivalence relation
- * @details Specifies that the comparison operators == and != on T reflects
- * equality: == yields true if and only if the operands are equal.
- * @note Standard library concept: comparison concept
- */
-//template<class T>
-//EXP_CONCEPT EqualityComparable = detail::WeaklyEqualityComparable<T, T>;
-
-/**
- * @concept Specifies that operator == is an equivalence relation [Incomplete]
- * @details Specifies that the comparison operators == and != on (possibly
- * mixed) T and U operands yield results consistent with equality.
- * @note Standard library concept: comparison concept
- * @todo Ensure thet comparing mixed operands yields results equivalent to
- * comparing the operands converted to their common type.
- */
-//template<class T, class U>
-//EXP_CONCEPT EqualityComparableWith =
-//        require<
-//        EqualityComparable<T>,
-//        EqualityComparable<U>,
-//        detail::WeaklyEqualityComparable<T, U>
-//        >;
+//CONCEPT SwappableWith = require<
+//std::is_swappable_with_v<T, T>,
+//std::is_swappable_with_v<U, U>,
+//std::is_swappable_with_v<T, U>,
+//std::is_swappable_with_v<U, T>
+//>;
 } // namespace concepts
 
 
