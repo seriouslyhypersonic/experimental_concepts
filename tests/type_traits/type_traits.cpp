@@ -251,6 +251,8 @@ namespace std
 
     template<> struct common_type<X, Y> { using type = Z; };
     template<> struct common_type<Y, X> { using type = Z; };
+
+    template<> struct common_type<X*, Y*> { using type = Z*; };
 } // namespace std
 
 namespace traits
@@ -260,11 +262,23 @@ namespace traits
 
     template<> struct common_type<X, Y>: std::common_type<X, Y> { };
     template<> struct common_type<Y, X>: std::common_type<Y, X> { };
+
+    template<> struct common_type<X*, Y*>: std::common_type<X*, Y*> { };
 } // namespace traits
 
 /* Test metafunction common_type --- */
 TEST_F(TypeTraitsTest, MetafunctionCommonType)
 {
+    // std::common_type
+    static_assert(std::is_same_v<std::common_type_t<int[], int*>, int*>);
+    static_assert(std::is_same_v<std::common_type_t<int[42], int*>, int*>);
+    static_assert(std::is_same_v<std::common_type_t<int(int), int(*)(int)>, int(*)(int)>);
+
+    // traits::common_type
+    static_assert(std::is_same_v<traits::common_type_t<int[], int*>, int*>);
+    static_assert(std::is_same_v<traits::common_type_t<int[42], int*>, int*>);
+    static_assert(std::is_same_v<traits::common_type_t<int(int), int(*)(int)>, int(*)(int)>);
+
     // std::common_type
     static_assert(std::is_same_v<std::common_type_t<X, Y>, Z>);
     static_assert(std::is_same_v<std::common_type_t<Y, X>, Z>);
@@ -327,9 +341,38 @@ TEST_F(TypeTraitsTest, MetafunctionCommonType)
     static_assert(std::is_same_v<std::common_type_t<X, ImplicitToX, Y>, Z>);
     static_assert(std::is_same_v<traits::common_type_t<X, ImplicitToX, Y>, Z>);
 
-    // Again same gcc bug when there is no decay?
+    // Again same gcc bug when there decay to different type?
 //    static_assert(std::is_same_v<std::common_type_t<X&&, ImplicitToX, Y&>, Z>);
     static_assert(std::is_same_v<traits::common_type_t<X&&, ImplicitToX, Y&>, Z>);
+
+    // Decay
+
+    // std::common_type
+    static_assert(std::is_same_v<std::common_type_t<X[], X*>, X*>);
+    static_assert(std::is_same_v<std::common_type_t<X[42], X*>, X*>);
+    static_assert(std::is_same_v<std::common_type_t<X(X), X(*)(X)>, X(*)(X)>);
+
+    static_assert(std::is_same_v<std::common_type_t<X*, Y*>, Z*>);
+    // does not work!
+//    static_assert(std::is_same_v<std::common_type_t<X[], Y*>, Z*>);
+//    static_assert(std::is_same_v<std::common_type_t<X*, Y[]>, Z*>);
+    static_assert(std::is_same_v<traits::common_type_t<X[], Y[]>, Z*>);
+
+    static_assert(std::is_same_v<std::common_type_t<X(Y), X(*)(Y)>, X(*)(Y)>);
+    static_assert(std::is_same_v<std::common_type_t<X(Y[]), X(*)(Y[])>, X(*)(Y*)>);
+
+    // traits::common_type
+    static_assert(std::is_same_v<traits::common_type_t<X[], X*>, X*>);
+    static_assert(std::is_same_v<traits::common_type_t<X[42], X*>, X*>);
+    static_assert(std::is_same_v<traits::common_type_t<X(X), X(*)(X)>, X(*)(X)>);
+
+    static_assert(std::is_same_v<traits::common_type_t<X*, Y*>, Z*>);
+    static_assert(std::is_same_v<traits::common_type_t<X[], Y*>, Z*>);
+    static_assert(std::is_same_v<traits::common_type_t<X*, Y[]>, Z*>);
+    static_assert(std::is_same_v<traits::common_type_t<X[], Y[]>, Z*>);
+
+    static_assert(std::is_same_v<traits::common_type_t<X(Y), X(*)(Y)>, X(*)(Y)>);
+    static_assert(std::is_same_v<traits::common_type_t<X(Y[]), X(*)(Y[])>, X(*)(Y*)>);
 }
 
 /* Test metafunction common_reference --- */

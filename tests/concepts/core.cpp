@@ -14,24 +14,6 @@
 #include <conceptslib/concepts.hpp>
 #include <conceptslib/type_traits.hpp>
 
-#define CONCAT(X, Y) X##Y
-#define CONCAT2(X, Y) CONCAT(X, Y)
-#define APPEND_LINE_NUM(X) CONCAT2(X, __LINE__)
-
-#define CONCEPT_EXPECT_TRUE(concept, ...) \
-{ \
-    constexpr bool Concept##concept = concept<__VA_ARGS__>; \
-    EXPECT_TRUE(Concept##concept); \
-} \
-void ANONYMOUS_FUNCTION() \
-
-#define CONCEPT_EXPECT_FALSE(concept, ...) \
-{ \
-    constexpr bool Concept##concept = concept<__VA_ARGS__>; \
-    EXPECT_FALSE(Concept##concept); \
-} \
-void ANONYMOUS_FUNCTION() \
-
 #define CONCEPT_ASSERT(expr) static_assert(expr, #expr)
 
 class CoreLanguageConceptTest: public ::testing::Test
