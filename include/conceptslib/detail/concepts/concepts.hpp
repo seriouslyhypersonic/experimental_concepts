@@ -13,8 +13,8 @@
  *                  - GitHub: https://github.com/tcbrindle/NanoRange
  */
 
-#ifndef CONCEPTS_H
-#define CONCEPTS_H
+#ifndef DETAIL_CONCEPTS_H
+#define DETAIL_CONCEPTS_H
 
 #define CONCEPT constexpr bool
 #define REQUIREMENT struct
@@ -159,4 +159,4 @@ template<class T> using allocator_type = typename T::allocator_type;
 } // namespace concepts
 
 
-#endif //CONCEPTS_H
+#endif //DETAIL_CONCEPTS_H

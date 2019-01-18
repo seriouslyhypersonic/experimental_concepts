@@ -12,8 +12,8 @@
 #include <conceptslib/type_traits.hpp>
 #include <conceptslib/detail/concepts/core.hpp>
 
-#include "tests/test_type_traits.hpp"
-#include "tests/test_concepts.hpp"
+#include "test_type_traits.hpp"
+#include "../tests/test_concepts.hpp"
 
 template<class... Ts>
 int test(Ts&&...);
