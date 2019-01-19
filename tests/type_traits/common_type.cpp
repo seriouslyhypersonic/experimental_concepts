@@ -52,11 +52,13 @@ TEST_F(TypeTraitCommonType, MetafunctionCommonType)
     static_assert(std::is_same_v<std::common_type_t<int[], int*>, int*>);
     static_assert(std::is_same_v<std::common_type_t<int[42], int*>, int*>);
     static_assert(std::is_same_v<std::common_type_t<int(int), int(*)(int)>, int(*)(int)>);
+    static_assert(std::is_same_v<std::common_type_t<int, float, double>, double>);
 
     // traits::common_type
     static_assert(std::is_same_v<traits::common_type_t<int[], int*>, int*>);
     static_assert(std::is_same_v<traits::common_type_t<int[42], int*>, int*>);
     static_assert(std::is_same_v<traits::common_type_t<int(int), int(*)(int)>, int(*)(int)>);
+    static_assert(std::is_same_v<traits::common_type_t<int, float, double>, double>);
 
     // std::common_type
     static_assert(std::is_same_v<std::common_type_t<X, Y>, Z>);
