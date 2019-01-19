@@ -231,8 +231,8 @@ TEST_F(CoreLanguageConceptTest, ConceptCommon)
 
 
     // Exists cast C <=> int
-    static_cast<int>(C{});
-    static_cast<C>(int{});
+//    static_cast<int>(C{});
+//    static_cast<C>(int{});
     // Needs explicit cast
     static_assert(!std::is_same_v<traits::common_type<C, int>, int>);
 
@@ -243,7 +243,7 @@ TEST_F(CoreLanguageConceptTest, ConceptCommon)
     static_assert(std::is_same_v<traits::common_type_t<B, A>, A>);
     static_assert(std::is_same_v<traits::common_reference_t<A, B>, A>);
     static_assert(std::is_same_v<traits::common_reference_t<B, A>, A>);;
-    static_cast<A>(B{});
+//    static_cast<A>(B{});
 
     CONCEPT_ASSERT((Common<A, B>));
     CONCEPT_ASSERT((Common<B, A>));
@@ -253,7 +253,7 @@ TEST_F(CoreLanguageConceptTest, ConceptCommon)
     static_assert(std::is_same_v<traits::common_type_t<C, A>, A>);
     static_assert(std::is_same_v<traits::common_reference_t<A, C>, A>);
     static_assert(std::is_same_v<traits::common_reference_t<C, A>, A>);;
-    static_cast<A>(C{});
+//    static_cast<A>(C{});
 
     CONCEPT_ASSERT((Common<A, C>));
     CONCEPT_ASSERT((Common<C, A>));
@@ -264,8 +264,8 @@ TEST_F(CoreLanguageConceptTest, ConceptCommon)
     // A is the common type of B and C
     static_assert(std::is_same_v<traits::common_reference_t<B, C>, A>);
     static_assert(std::is_same_v<traits::common_reference_t<B, C>, A>);;
-    static_cast<A>(B{});
-    static_cast<A>(C{});
+//    static_cast<A>(B{});
+//    static_cast<A>(C{});
 
     CONCEPT_ASSERT((Common<B, C>));
     CONCEPT_ASSERT((Common<C, B>));
@@ -273,8 +273,8 @@ TEST_F(CoreLanguageConceptTest, ConceptCommon)
     // A is the common type of B and D
     static_assert(std::is_same_v<traits::common_type_t<B, D>, A>);
     static_assert(std::is_same_v<traits::common_type_t<D, B>, A>);
-    static_cast<A>(B{});
-    static_cast<A>(D{});
+//    static_cast<A>(B{});
+//    static_cast<A>(D{});
 
     // B implicitly convertible to D and the common_reference precedence rules
     // state that decltype(false? val<B>() : val<D>()) has higher precedence
@@ -284,7 +284,7 @@ TEST_F(CoreLanguageConceptTest, ConceptCommon)
 
     static_assert(std::is_same_v<traits::common_reference_t<const B&, const D&>, const D>);
 
-    std::cout << typeid(traits::common_reference_t<const B&, const D&>).name() << '\n';
+//    std::cout << typeid(traits::common_reference_t<const B&, const D&>).name() << '\n';
 
     CONCEPT_ASSERT((Common<B, D>));
 

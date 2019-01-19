@@ -46,7 +46,9 @@ endif()
 # ---------------------------------------------------------------------------- #
 
 add_executable(run_tests
-        concepts/core.cpp type_traits/type_traits.cpp type_traits/type_traits.cpp type_traits/type_traits.cpp)
+        concepts/core.cpp
+        type_traits/type_traits.cpp
+        type_traits/common_reference.cpp type_traits/common_type.cpp)
 
 target_link_libraries(run_tests
         conceptslib

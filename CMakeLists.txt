@@ -7,6 +7,8 @@ project(experimental_concepts
 
 set(CMAKE_CXX_STANDARD 17)
 
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic-errors")
+
 # Create an INTERFACE library
 add_library(conceptslib INTERFACE)
 
