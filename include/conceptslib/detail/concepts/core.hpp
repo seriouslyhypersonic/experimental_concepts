@@ -136,7 +136,6 @@ REQUIREMENT AssignableReq
  * @concept Specifies that a type is assignable from another type
  * @details Only checks that a type has an assignment operator for a specific
  * argument.
- * @note Standard library concept: core language concept
  */
 template<class LHS, class RHS>
 CONCEPT Assignable =
@@ -149,7 +148,6 @@ CONCEPT Assignable =
 /**
  * @concept Specifies that a type can be swapped
  * @details Specifies that lvalues of type T are swappable.
- * @note Standard library concept: core language concept
  */
 template<class T>
 CONCEPT Swappable = std::is_swappable_v<T>;
@@ -159,15 +157,16 @@ CONCEPT Swappable = std::is_swappable_v<T>;
  * @concept Specifies that two types can be swapped with each other [Incomplete]
  * @details Specifies that expressions of the type and value category encoded
  * by T and U are swappable with each other.
- * @note Standard library concept: core language concept
- * @todo CommonReference
+ * @note These definitions of Swappable and SwappableWith are expected to be
+ * temporary, and will be replaced if the full Ranges proposal is adopted for
+ * C++20.
  */
 template<class T, class U>
 CONCEPT SwappableWith =
     std::is_swappable_with_v<T, T> &&
     std::is_swappable_with_v<U, U> &&
-    CommonReference<const std::remove_reference_t<T>&
-                   ,const std::remove_reference_t<U>&> &&
+    CommonReference<detected_t<traits::detail::clref_t, T>
+                   ,detected_t<traits::detail::clref_t, U>> &&
     std::is_swappable_with_v<T, U> &&
     std::is_swappable_with_v<U, T>;
 

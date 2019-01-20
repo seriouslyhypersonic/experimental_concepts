@@ -417,3 +417,41 @@ TEST_F(CoreLanguageConcepts, ConceptAssignable)
     CONCEPT_ASSERT(!Assignable<WeirdAssign&, WeirdAssign&&>);
 }
 
+/* --- Concept Swappable --- */
+TEST_F(CoreLanguageConcepts, ConceptSwappable)
+{
+    using concepts::Swappable;
+    using concepts::SwappableWith;
+
+    CONCEPT_ASSERT(Swappable<int>);
+    CONCEPT_ASSERT(Swappable<std::string>);
+    CONCEPT_ASSERT(Swappable<Base>);
+    CONCEPT_ASSERT(Swappable<Derived>);
+    CONCEPT_ASSERT(Swappable<ProtectedDerived>);
+    CONCEPT_ASSERT(Swappable<PrivateDerived>);
+
+    CONCEPT_ASSERT(Swappable<int*>);
+    CONCEPT_ASSERT(Swappable<Base*>);
+    CONCEPT_ASSERT(Swappable<Derived*>);
+
+    CONCEPT_ASSERT(Swappable<int&>);
+    CONCEPT_ASSERT(Swappable<Base&>);
+    CONCEPT_ASSERT(Swappable<Derived&>);
+
+    CONCEPT_ASSERT(Swappable<int&&>);
+    CONCEPT_ASSERT(Swappable<Base&&>);
+    CONCEPT_ASSERT(Swappable<Derived&&>);
+
+    CONCEPT_ASSERT(!Swappable<void>);
+
+    CONCEPT_ASSERT(SwappableWith<Base&, Base&>);
+    CONCEPT_ASSERT(!SwappableWith<Base&, Derived&>);
+    CONCEPT_ASSERT(!SwappableWith<Derived&, Base&>);
+    CONCEPT_ASSERT(SwappableWith<Derived&, Derived&>);
+
+    CONCEPT_ASSERT(!SwappableWith<void, void>);
+    CONCEPT_ASSERT(SwappableWith<int&, int&>);
+    CONCEPT_ASSERT(!SwappableWith<int&, long&>);
+    CONCEPT_ASSERT(!SwappableWith<int&, const int&>);
+}
+
