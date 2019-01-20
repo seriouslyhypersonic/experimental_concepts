@@ -141,8 +141,8 @@ REQUIREMENT AssignableReq
 template<class LHS, class RHS>
 CONCEPT Assignable =
     std::is_lvalue_reference_v<LHS> &&
-    CommonReference<const std::remove_reference_t<LHS>&
-                   ,const std::remove_reference_t<RHS>&> &&
+    CommonReference<detected_t<traits::detail::clref_t, LHS>
+                   ,detected_t<traits::detail::clref_t, RHS>> &&
     requires_<detail::AssignableReq, LHS, RHS>;
 
 /* --- Concept Swappable --- */

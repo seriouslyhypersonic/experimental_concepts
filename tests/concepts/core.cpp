@@ -375,3 +375,45 @@ TEST_F(CoreLanguageConcepts, ConceptUnsignedIntegral)
     CONCEPT_ASSERT(!UnsignedInteral<A>);
 }
 
+/* --- Concept Assignable --- */
+TEST_F(CoreLanguageConcepts, ConceptAssignable)
+{
+    using concepts::Assignable;
+
+    struct RegularAssign{ RegularAssign& operator=(const RegularAssign&); };
+
+    // Note: operator=() does not yield an lvalue referring to the left operand
+    struct WeirdAssign { WeirdAssign operator=(const WeirdAssign&); };
+
+    CONCEPT_ASSERT(Assignable<int&, int>);
+    CONCEPT_ASSERT(Assignable<int&, int&>);
+    CONCEPT_ASSERT(Assignable<int&, int&&>);
+
+    CONCEPT_ASSERT(!Assignable<int, int>);
+    CONCEPT_ASSERT(!Assignable<int, int&>);
+    CONCEPT_ASSERT(!Assignable<int, int&&>);
+
+    CONCEPT_ASSERT(!Assignable<const int&, int>);
+    CONCEPT_ASSERT(!Assignable<const int&, int&>);
+    CONCEPT_ASSERT(!Assignable<const int&, int&&>);
+
+    CONCEPT_ASSERT(!Assignable<int&&, int>); // Is this correct?
+    CONCEPT_ASSERT(!Assignable<int&&, int&>); // Is this correct?
+    CONCEPT_ASSERT(!Assignable<int&&, int&&>); // Is this correct?
+    
+    CONCEPT_ASSERT(Assignable<std::string&, const char*>);
+    CONCEPT_ASSERT(!Assignable<void, int>);
+
+    CONCEPT_ASSERT(Assignable<RegularAssign&, RegularAssign>);
+    CONCEPT_ASSERT(Assignable<RegularAssign&, RegularAssign&>);
+    CONCEPT_ASSERT(Assignable<RegularAssign&, RegularAssign&&>);
+
+    CONCEPT_ASSERT(!Assignable<const RegularAssign&, RegularAssign>);
+    CONCEPT_ASSERT(!Assignable<const RegularAssign&, RegularAssign&>);
+    CONCEPT_ASSERT(!Assignable<const RegularAssign&, RegularAssign&&>);
+
+    CONCEPT_ASSERT(!Assignable<WeirdAssign&, WeirdAssign>);
+    CONCEPT_ASSERT(!Assignable<WeirdAssign&, WeirdAssign&>);
+    CONCEPT_ASSERT(!Assignable<WeirdAssign&, WeirdAssign&&>);
+}
+
