@@ -124,6 +124,11 @@ template<class T> using arrow = decltype(declval<T>().operator->());
 template<class T> using postfix_increment = decltype(declval<T>()++);
 template<class T> using prefix_increment = decltype(++declval<T>());
 
+template<class T> using pointer = T*;
+template<class T> using lreference = T&;
+template<class T> using clreference = const T&;
+template<class T> using rreference = T&&;
+
 } // namespace ops
 
 /* Aliases detectors */
@@ -135,27 +140,6 @@ template<class T> using size_tye = typename T::size_type;
 template<class T> using allocator_type = typename T::allocator_type;
 }
 
-/* Concepts */
-
-//using std::declval;
-
-/* --- Standard library concepts (tries to model the concepts library ) --- */
-
-/* Core language concepts */
-/**
- * @concept Specifies that two types can be swapped with each other [Incomplete]
- * @details Specifies that expressions of the type and value category encoded
- * by T and U are swappable with each other.
- * @note Standard library concept: core language concept
- * @todo CommonReference
- */
-//template<class T, class U>
-//CONCEPT SwappableWith = require<
-//std::is_swappable_with_v<T, T>,
-//std::is_swappable_with_v<U, U>,
-//std::is_swappable_with_v<T, U>,
-//std::is_swappable_with_v<U, T>
-//>;
 } // namespace concepts
 
 

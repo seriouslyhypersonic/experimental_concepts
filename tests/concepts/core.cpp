@@ -8,6 +8,7 @@
 
 #include <type_traits>
 #include <string>
+#include <memory>
 
 #include <gtest/gtest.h>
 
@@ -71,6 +72,15 @@ protected:
     {
         explicit operator int() const;
     };
+
+    struct NoThrowDestructor { ~NoThrowDestructor() noexcept = default; };
+    struct ThrowDestructor { ~ThrowDestructor() noexcept(false); };
+    class PrivateDestructor { ~PrivateDestructor() = default; };
+
+    struct NoMove { NoMove(NoMove&&) = delete; };
+    struct NoCopy { NoCopy(const NoCopy&) = delete; };
+    struct NoMoveNoCopy: NoMove, NoCopy
+    { };
 };
 
 namespace traits
@@ -383,7 +393,7 @@ TEST_F(CoreLanguageConcepts, ConceptAssignable)
     struct RegularAssign{ RegularAssign& operator=(const RegularAssign&); };
 
     // Note: operator=() does not yield an lvalue referring to the left operand
-    struct WeirdAssign { WeirdAssign operator=(const WeirdAssign&); };
+    struct OddAssign { OddAssign operator=(const OddAssign&); };
 
     CONCEPT_ASSERT(Assignable<int&, int>);
     CONCEPT_ASSERT(Assignable<int&, int&>);
@@ -412,9 +422,9 @@ TEST_F(CoreLanguageConcepts, ConceptAssignable)
     CONCEPT_ASSERT(!Assignable<const RegularAssign&, RegularAssign&>);
     CONCEPT_ASSERT(!Assignable<const RegularAssign&, RegularAssign&&>);
 
-    CONCEPT_ASSERT(!Assignable<WeirdAssign&, WeirdAssign>);
-    CONCEPT_ASSERT(!Assignable<WeirdAssign&, WeirdAssign&>);
-    CONCEPT_ASSERT(!Assignable<WeirdAssign&, WeirdAssign&&>);
+    CONCEPT_ASSERT(!Assignable<OddAssign&, OddAssign>);
+    CONCEPT_ASSERT(!Assignable<OddAssign&, OddAssign&>);
+    CONCEPT_ASSERT(!Assignable<OddAssign&, OddAssign&&>);
 }
 
 /* --- Concept Swappable --- */
@@ -453,5 +463,91 @@ TEST_F(CoreLanguageConcepts, ConceptSwappable)
     CONCEPT_ASSERT(SwappableWith<int&, int&>);
     CONCEPT_ASSERT(!SwappableWith<int&, long&>);
     CONCEPT_ASSERT(!SwappableWith<int&, const int&>);
+}
+
+/* --- Concept Destructible --- */
+TEST_F(CoreLanguageConcepts, ConceptDestructible)
+{
+    using concepts::Destructible;
+
+    CONCEPT_ASSERT(Destructible<NoThrowDestructor>);
+    CONCEPT_ASSERT(!Destructible<ThrowDestructor>);
+    CONCEPT_ASSERT(!Destructible<PrivateDestructor>);
+
+    CONCEPT_ASSERT(Destructible<int>);
+    CONCEPT_ASSERT(Destructible<std::string>);
+    CONCEPT_ASSERT(!Destructible<void>);
+}
+
+/* --- Concept Constructible --- */
+TEST_F(CoreLanguageConcepts, ConceptConstructible)
+{
+    using concepts::Constructible;
+
+    CONCEPT_ASSERT(Constructible<Base, Derived>);
+    CONCEPT_ASSERT(Constructible<Base, Derived&>);
+    CONCEPT_ASSERT(Constructible<Base, const Derived&>);
+    CONCEPT_ASSERT(Constructible<Base&, Derived&>);
+    CONCEPT_ASSERT(Constructible<const Base&, Derived&>);
+    CONCEPT_ASSERT(Constructible<const Base&, Derived&&>);
+    CONCEPT_ASSERT(Constructible<const Base&, const Derived&>);
+
+    CONCEPT_ASSERT(Constructible<FromIntOnly, int>);
+    CONCEPT_ASSERT(Constructible<FromIntOnly, int&>);
+    CONCEPT_ASSERT(!Constructible<FromIntOnly, char>);
+
+    CONCEPT_ASSERT(!Constructible<void>);
+    CONCEPT_ASSERT(Constructible<std::string, const char*>);
+    CONCEPT_ASSERT(Constructible<std::string, const char(&)[]>);
+    CONCEPT_ASSERT(Constructible<std::string, char, int, std::allocator<char>>);
+
+}
+
+/* --- Concept DefaultConstructible --- */
+TEST_F(CoreLanguageConcepts, ConceptDefaultConstructible)
+{
+    using concepts::DefaultConstructible;
+
+    CONCEPT_ASSERT(DefaultConstructible<int>);
+    CONCEPT_ASSERT(DefaultConstructible<Base>);
+    CONCEPT_ASSERT(DefaultConstructible<std::string>);
+    CONCEPT_ASSERT(!DefaultConstructible<void>);
+
+    CONCEPT_ASSERT(!DefaultConstructible<FromIntOnly>);
+}
+
+/* --- Concept MoveConstructible --- */
+TEST_F(CoreLanguageConcepts, ConceptMoveMoveConstructible)
+{
+    using concepts::MoveConstructible;
+
+    CONCEPT_ASSERT(MoveConstructible<Base>);
+    CONCEPT_ASSERT(MoveConstructible<Derived>);
+    CONCEPT_ASSERT(MoveConstructible<std::unique_ptr<int>>);
+    CONCEPT_ASSERT(MoveConstructible<std::shared_ptr<int>>);
+
+    CONCEPT_ASSERT(!MoveConstructible<NoMove>);
+    CONCEPT_ASSERT(!MoveConstructible<NoCopy>);
+    CONCEPT_ASSERT(!MoveConstructible<NoMoveNoCopy>);
+}
+
+/* --- Concept CopyConstructible --- */
+TEST_F(CoreLanguageConcepts, ConceptCopyConstructible)
+{
+    using concepts::CopyConstructible;
+
+    struct OddCopyCtor { OddCopyCtor(OddCopyCtor& ); };
+
+    CONCEPT_ASSERT(CopyConstructible<Base>);
+    CONCEPT_ASSERT(CopyConstructible<Derived>);
+    CONCEPT_ASSERT(CopyConstructible<std::shared_ptr<int>>);
+    CONCEPT_ASSERT(CopyConstructible<std::string>);
+
+    CONCEPT_ASSERT(!CopyConstructible<void>);
+    CONCEPT_ASSERT(!CopyConstructible<std::unique_ptr<int>>);
+    CONCEPT_ASSERT(!CopyConstructible<NoCopy>);
+    CONCEPT_ASSERT(!CopyConstructible<NoMove>);
+    CONCEPT_ASSERT(!CopyConstructible<NoMoveNoCopy>);
+    CONCEPT_ASSERT(!CopyConstructible<OddCopyCtor>);
 }
 
