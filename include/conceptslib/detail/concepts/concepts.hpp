@@ -39,7 +39,7 @@ namespace detail
 template<class... Ts>
 void valid_expr(Ts&&...);
 
-// Generate an instantiatable return type if Exp result is true
+// Generate an instantiatable return type (an int) if Exp result is true
 template<bool Exp>
 auto valid_if() -> std::enable_if_t<Exp, int>;
 
@@ -67,14 +67,14 @@ const bool requires_ = is_detected_v<detail::test_requires_t, Req, Args...>;
 
 /* Special names to use with Concepts */
 // Most likely unecessary
-template<bool... bools>
-constexpr bool require = std::conjunction<std::bool_constant<bools>...>::value;
-
-template<bool... bools>
-constexpr bool either = std::disjunction<std::bool_constant<bools>...>::value;
-
-template<bool... bools>
-constexpr bool disallow = !require<bools...>;
+//template<bool... bools>
+//constexpr bool require = std::conjunction<std::bool_constant<bools>...>::value;
+//
+//template<bool... bools>
+//constexpr bool either = std::disjunction<std::bool_constant<bools>...>::value;
+//
+//template<bool... bools>
+//constexpr bool disallow = !require<bools...>;
 
 template<template <class...> class Op, class... Args>
 constexpr bool exists = is_detected_v<Op, Args...>;
@@ -141,6 +141,5 @@ template<class T> using allocator_type = typename T::allocator_type;
 }
 
 } // namespace concepts
-
 
 #endif //DETAIL_CONCEPTS_H

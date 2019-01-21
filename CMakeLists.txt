@@ -17,8 +17,13 @@ target_sources(conceptslib INTERFACE
         ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/detail/type_traits/common_reference.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/detail/type_traits/common_type.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/detail/type_traits/type_traits.hpp
+
         ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/detail/concepts/concepts.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/detail/concepts/core.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/detail/concepts/comparison.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/detail/concepts/movable.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/detail/concepts/object.hpp
+
         ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/type_traits.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/concepts.hpp)
 

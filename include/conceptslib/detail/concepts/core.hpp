@@ -226,11 +226,9 @@ template<class T>
 CONCEPT CopyConstructible =
     MoveConstructible<T> &&
     Constructible<T, detected_t<ops::lreference, T>> &&
-    ConvertibleTo<detected_t<ops::lreference, T>, T> &&
-
+        ConvertibleTo<detected_t<ops::lreference, T>, T> &&
     Constructible<T, detected_t<ops::clreference, T>> &&
-    ConvertibleTo<detected_t<ops::clreference, T>, T> &&
-
+        ConvertibleTo<detected_t<ops::clreference, T>, T> &&
     Constructible<T, const T> && ConvertibleTo<const T, T>;
 
 } // namespace concepts

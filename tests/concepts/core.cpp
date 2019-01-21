@@ -159,6 +159,7 @@ TEST_F(CoreLanguageConcepts, ConceptDerivedFrom)
     CONCEPT_ASSERT(DerivedFrom<Derived, Base>);
     CONCEPT_ASSERT(!DerivedFrom<ProtectedDerived, Base>);
     CONCEPT_ASSERT(!DerivedFrom<PrivateDerived, Base>);
+    CONCEPT_ASSERT(!DerivedFrom<NotDerived, Base>);
 }
 
 /* --- Concept ConvertibleTo --- */
@@ -550,4 +551,3 @@ TEST_F(CoreLanguageConcepts, ConceptCopyConstructible)
     CONCEPT_ASSERT(!CopyConstructible<NoMoveNoCopy>);
     CONCEPT_ASSERT(!CopyConstructible<OddCopyCtor>);
 }
-
