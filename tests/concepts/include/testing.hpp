@@ -5,11 +5,11 @@
  * Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
  */
-#ifndef CONCEPTS_H
-#define CONCEPTS_H
+#ifndef TESTING_H
+#define TESTING_H
 
-#include <conceptslib/detail/concepts/concepts.hpp>
-#include <conceptslib/detail/concepts/core.hpp>
-#include <conceptslib/detail/concepts/comparison.hpp>
+#include <gtest/gtest.h>
 
-#endif //CONCEPTS_H
+#define CONCEPT_ASSERT(...) static_assert(__VA_ARGS__, #__VA_ARGS__)
+
+#endif //TESTING_H

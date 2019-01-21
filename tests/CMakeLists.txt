@@ -48,7 +48,11 @@ endif()
 add_executable(run_tests
         concepts/core.cpp
         type_traits/type_traits.cpp
-        type_traits/common_reference.cpp type_traits/common_type.cpp)
+        type_traits/common_reference.cpp
+        type_traits/common_type.cpp
+        concepts/comparison.cpp)
+
+target_include_directories(run_tests PRIVATE concepts/include)
 
 target_link_libraries(run_tests
         conceptslib

@@ -10,12 +10,10 @@
 #include <string>
 #include <memory>
 
-#include <gtest/gtest.h>
+#include <testing.hpp>
 
 #include <conceptslib/concepts.hpp>
 #include <conceptslib/type_traits.hpp>
-
-#define CONCEPT_ASSERT(...) static_assert(__VA_ARGS__, #__VA_ARGS__)
 
 class CoreLanguageConcepts: public ::testing::Test
 {

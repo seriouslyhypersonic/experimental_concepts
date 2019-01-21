@@ -22,10 +22,10 @@ namespace concepts
  */
 template<class T>
 CONCEPT Movable =
-        std::is_object_v<T> &&
-        MoveConstructible<T> &&
-        Assignable<detected_t<ops::lreference, T>, T> &&
-Swappable<T>;
+    std::is_object_v<T> &&
+    MoveConstructible<T> &&
+    Assignable<detected_t<ops::lreference, T>, T> &&
+    Swappable<T>;
 
 } // namespace concepts
 
