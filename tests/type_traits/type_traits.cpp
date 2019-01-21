@@ -11,6 +11,26 @@
 
 #include <conceptslib/type_traits.hpp>
 
+/* --- Test metafunction clref --- */
+TEST(TypeTraits, MetafunctionCLRef)
+{
+    using traits::clref_t;
+
+    static_assert(std::is_same_v<clref_t<int>, const int&>);
+    static_assert(std::is_same_v<clref_t<const int>, const int&>);
+    static_assert(std::is_same_v<clref_t<const volatile int>, const volatile int&>);
+
+    static_assert(std::is_same_v<clref_t<int&>, const int&>);
+    static_assert(std::is_same_v<clref_t<const int&>, const int&>);
+    static_assert(
+    std::is_same_v<clref_t<const volatile int&>, const volatile int&>);
+
+    static_assert(std::is_same_v<clref_t<int&&>, const int&>);
+    static_assert(std::is_same_v<clref_t<const int&&>, const int&>);
+    static_assert(
+    std::is_same_v<clref_t<const volatile int&&>, const volatile int&>);
+}
+
 /* --- Test metafunction remove_cvref --- */
 TEST(TypeTraits, MetafunctionRemoveCVRef)
 {

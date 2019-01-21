@@ -65,12 +65,28 @@ template <class To, template<class...> class Op, class... Args>
 constexpr bool is_detected_convertible_v =
                std::experimental::is_detected_convertible_v<To, Op, Args...>;
 
+/* --- Metafunction clref --- */
+/**
+ * @metafunction Create a const lvalue referene from the underlying type of T.
+ * @details If the type T is a reference type, provides the member typedef \c
+ * type which is a const lvalue reference to the type refered to by T.
+ * Otherwise, \c type is a const lvalue reference to T,
+ */
+ template<class T>
+ struct clref
+ {
+     using type = std::add_lvalue_reference_t<const std::remove_reference_t<T>>;
+ };
+
+ /// Helper typedef to access \c clref member \c type.
+ template<class T> using clref_t = typename clref<T>::type;
+
 /* --- Metafunction remove_cvref --- */
 /**
  *  @metafunction Remove topmost cv-qualifiers of T or of the type refered by it
  *  @details If the type T is a reference type, provides the member typedef
  *  \c type which is the type referred to by T with its topmost cv-qualifiers
- *  removed. Otherwise type is T with its topmost cv-qualifiers removed.
+ *  removed. Otherwise, \c type is T with its topmost cv-qualifiers removed.
  *  @note Same implementation of future std::remove_cvref (C++20)
  */
 template<class T>

@@ -58,7 +58,7 @@ struct binary_common_type<
     using type = ternary_return_t<T, U>;
 };
 
-using traits::detail::clref_t;
+using traits::clref_t;
 template<class T, class U>
 struct binary_common_type<
     T, U, std::enable_if_t<same_decayed_v<T, U> &&

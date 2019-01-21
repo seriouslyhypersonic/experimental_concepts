@@ -140,8 +140,8 @@ REQUIREMENT AssignableReq
 template<class LHS, class RHS>
 CONCEPT Assignable =
     std::is_lvalue_reference_v<LHS> &&
-    CommonReference<detected_t<traits::detail::clref_t, LHS>
-                   ,detected_t<traits::detail::clref_t, RHS>> &&
+    CommonReference<detected_t<traits::clref_t, LHS>
+                   ,detected_t<traits::clref_t, RHS>> &&
     requires_<detail::AssignableReq, LHS, RHS>;
 
 /* --- Concept Swappable --- */
@@ -165,8 +165,8 @@ template<class T, class U>
 CONCEPT SwappableWith =
     std::is_swappable_with_v<T, T> &&
     std::is_swappable_with_v<U, U> &&
-    CommonReference<detected_t<traits::detail::clref_t, T>
-                   ,detected_t<traits::detail::clref_t, U>> &&
+    CommonReference<detected_t<traits::clref_t, T>
+                   ,detected_t<traits::clref_t, U>> &&
     std::is_swappable_with_v<T, U> &&
     std::is_swappable_with_v<U, T>;
 

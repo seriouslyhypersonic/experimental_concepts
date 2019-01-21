@@ -18,26 +18,6 @@
     #define TRANSFORM_REF(x) x&&
 #endif
 
-/* --- Test metafunction clref --- */
-TEST(TypeTraitCommonReference, MetafunctionCLRef)
-{
-    using traits::detail::clref_t;
-
-    static_assert(std::is_same_v<clref_t<int>, const int&>);
-    static_assert(std::is_same_v<clref_t<const int>, const int&>);
-    static_assert(std::is_same_v<clref_t<const volatile int>, const volatile int&>);
-
-    static_assert(std::is_same_v<clref_t<int&>, const int&>);
-    static_assert(std::is_same_v<clref_t<const int&>, const int&>);
-    static_assert(
-    std::is_same_v<clref_t<const volatile int&>, const volatile int&>);
-
-    static_assert(std::is_same_v<clref_t<int&&>, const int&>);
-    static_assert(std::is_same_v<clref_t<const int&&>, const int&>);
-    static_assert(
-    std::is_same_v<clref_t<const volatile int&&>, const volatile int&>);
-}
-
 /* --- Test metafunction rref --- */
 TEST(TypeTraitCommonReference, MetafunctionRRef)
 {

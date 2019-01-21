@@ -28,10 +28,6 @@ struct common_type;
 
 namespace detail
 {
-// Create a const lvalue reference from the underlying type of T.
-template<class T>
-using clref_t = std::add_lvalue_reference_t<const std::remove_reference_t<T>>;
-
 // Create an rvalue reference from a reference type T. Otherwise, use T.
 template <class T>
 struct rref
