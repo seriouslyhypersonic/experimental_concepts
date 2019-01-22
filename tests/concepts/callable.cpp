@@ -23,6 +23,8 @@ const auto lambd2 = [](int&){ };
 const auto genericLambda =
     [](const auto& lhs, const auto& rhs) { return lhs + rhs; };
 
+const auto genericLambdaByRef = [](auto& ) { };
+
 TEST(CallableConcepts, ConceptInvocable)
 {
     using concepts::Invocable;
@@ -46,6 +48,16 @@ TEST(CallableConcepts, ConceptInvocable)
     CONCEPT_ASSERT(!Invocable<decltype(lambd2), const int&>);
 
     CONCEPT_ASSERT(Invocable<decltype(genericLambda), int, int>);
+    CONCEPT_ASSERT(Invocable<decltype(genericLambda),
+        std::string, std::string>);
+
+    // Hard error
+#if false
+    CONCEPT_ASSERT(!Invocable<decltype(genericLambda), std::string, int>);
+#endif
+
+    CONCEPT_ASSERT(!Invocable<decltype(genericLambdaByRef), int>);
+    CONCEPT_ASSERT(Invocable<decltype(genericLambdaByRef), int&>);
 }
 
 /* --- Concept Predicate --- */
