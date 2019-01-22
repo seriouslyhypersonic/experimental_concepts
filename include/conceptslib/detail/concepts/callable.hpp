@@ -56,7 +56,7 @@ CONCEPT RegularInvocable = Invocable<F, Args...>;
 template<class F, class... Args>
 CONCEPT Predicate =
     RegularInvocable<F, Args...> &&
-    Boolean<std::invoke_result_t<F, Args...>>;
+    Boolean<traits::detected_t<std::invoke_result_t, F, Args...>>;
 
 /* --- Concept Relation --- */
 /**

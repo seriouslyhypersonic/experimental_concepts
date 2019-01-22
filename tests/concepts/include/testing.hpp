@@ -10,6 +10,7 @@
 
 #include <gtest/gtest.h>
 
-#define CONCEPT_ASSERT(...) static_assert(__VA_ARGS__, #__VA_ARGS__)
+#define CONCEPT_ASSERT(...) static_assert(__VA_ARGS__, \
+    "concept assertion failed due to " #__VA_ARGS__)
 
 #endif //TESTING_H

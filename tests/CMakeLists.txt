@@ -51,7 +51,8 @@ add_executable(run_tests
         type_traits/common_type.cpp
         concepts/core.cpp
         concepts/comparison.cpp
-        concepts/object.cpp)
+        concepts/object.cpp
+        concepts/callable.cpp)
 
 target_include_directories(run_tests PRIVATE concepts/include)
 
