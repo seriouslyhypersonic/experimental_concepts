@@ -4,6 +4,9 @@
  * Use, modification and distribution is subject to the Boost Software License,
  * Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
+ *
+ * Acknowledgments: Copyright (c) Casey Carter 2015
+ *                  - GitHub: https://github.com/caseycarter/cmcstl2
  */
 
 #include <type_traits>
@@ -476,6 +479,15 @@ TEST_F(CoreLanguageConcepts, ConceptDestructible)
     CONCEPT_ASSERT(Destructible<int>);
     CONCEPT_ASSERT(Destructible<std::string>);
     CONCEPT_ASSERT(!Destructible<void>);
+
+    CONCEPT_ASSERT(!Destructible<int[]>);
+    CONCEPT_ASSERT(Destructible<int[32]>);
+    CONCEPT_ASSERT(Destructible<int(*)[]>);
+    CONCEPT_ASSERT(Destructible<int(*)[32]>);
+    CONCEPT_ASSERT(Destructible<int(&)[]>);
+    CONCEPT_ASSERT(Destructible<int(&)[32]>);
+    CONCEPT_ASSERT(Destructible<void(*)()>);
+    CONCEPT_ASSERT(Destructible<void(&)()>);
 }
 
 /* --- Concept Constructible --- */

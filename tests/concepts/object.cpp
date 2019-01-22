@@ -8,6 +8,8 @@
  * Acknowledgments: Copyright (c) Casey Carter 2015
  *                  - GitHub: https://github.com/caseycarter/cmcstl2
  */
+#include <string>
+
 #include <testing.hpp>
 
 #include <conceptslib/concepts.hpp>
@@ -67,8 +69,10 @@ TEST_F(ObjectConcepts, ConceptMovable)
     CONCEPT_ASSERT(Movable<int>);
     CONCEPT_ASSERT(!Movable<const int>);
     CONCEPT_ASSERT(Movable<double>);
+    CONCEPT_ASSERT(Movable<std::string>);
     CONCEPT_ASSERT(!Movable<void>);
     CONCEPT_ASSERT(!Movable<int&>);
+    CONCEPT_ASSERT(Movable<int*>);
 
     CONCEPT_ASSERT(Movable<CopyableType>);
     CONCEPT_ASSERT(Movable<MoveOnly>);
@@ -86,8 +90,10 @@ TEST_F(ObjectConcepts, ConceptCopyable)
     CONCEPT_ASSERT(Copyable<int>);
     CONCEPT_ASSERT(!Copyable<const int>);
     CONCEPT_ASSERT(Copyable<double>);
+    CONCEPT_ASSERT(Copyable<std::string>);
     CONCEPT_ASSERT(!Copyable<void>);
     CONCEPT_ASSERT(!Copyable<int&>);
+    CONCEPT_ASSERT(Copyable<int*>);
 
     CONCEPT_ASSERT(Copyable<CopyableType>);
     CONCEPT_ASSERT(!Copyable<MoveOnly>);
@@ -106,8 +112,10 @@ TEST_F(ObjectConcepts, ConceptSemiregular)
     CONCEPT_ASSERT(!Semiregular<const int>);
     CONCEPT_ASSERT(Semiregular<int>);
     CONCEPT_ASSERT(Semiregular<double>);
+    CONCEPT_ASSERT(Semiregular<std::string>);
     CONCEPT_ASSERT(!Semiregular<void>);
     CONCEPT_ASSERT(!Semiregular<int&>);
+    CONCEPT_ASSERT(Semiregular<int*>);
 
     CONCEPT_ASSERT(Semiregular<SemiregularType>);
     CONCEPT_ASSERT(Semiregular<RegularType>);
@@ -128,8 +136,10 @@ TEST_F(ObjectConcepts, ConceptRegular)
     CONCEPT_ASSERT(!Regular<const int>);
     CONCEPT_ASSERT(Regular<int>);
     CONCEPT_ASSERT(Regular<double>);
+    CONCEPT_ASSERT(Regular<std::string>);
     CONCEPT_ASSERT(!Regular<void>);
     CONCEPT_ASSERT(!Regular<int&>);
+    CONCEPT_ASSERT(Regular<int*>);
 
     CONCEPT_ASSERT(!Regular<SemiregularType>);
     CONCEPT_ASSERT(Regular<RegularType>);
