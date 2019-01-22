@@ -13,5 +13,6 @@
 #include <conceptslib/detail/concepts/comparison.hpp>
 #include <conceptslib/detail/concepts/movable.hpp>
 #include <conceptslib/detail/concepts/object.hpp>
+#include <conceptslib/detail/concepts/callable.hpp>
 
 #endif //CONCEPTS_H

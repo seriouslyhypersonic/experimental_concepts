@@ -23,6 +23,7 @@ target_sources(conceptslib INTERFACE
         ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/detail/concepts/comparison.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/detail/concepts/movable.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/detail/concepts/object.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/detail/concepts/callable.hpp
 
         ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/type_traits.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/include/conceptslib/concepts.hpp)
