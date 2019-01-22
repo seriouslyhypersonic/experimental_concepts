@@ -11,5 +11,7 @@
 #include <conceptslib/detail/concepts/concepts.hpp>
 #include <conceptslib/detail/concepts/core.hpp>
 #include <conceptslib/detail/concepts/comparison.hpp>
+#include <conceptslib/detail/concepts/movable.hpp>
+#include <conceptslib/detail/concepts/object.hpp>
 
 #endif //CONCEPTS_H
