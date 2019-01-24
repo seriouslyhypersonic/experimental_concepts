@@ -65,7 +65,7 @@ private:
     -> std::enable_if_t<std::is_function_v<T> &&
                            !is_reference_wrapper_v<std::decay_t<Pointer>> &&
                            !std::is_base_of_v<Base, std::decay_t<Pointer>>
-                       , decltype(((*std::forward<Pointer>(*ptr)).*pmf)
+                       ,decltype(((*std::forward<Pointer>(*ptr)).*pmf)
                            (std::forward<Args>(args)...))>
     {
         return ((*std::forward<Pointer>(ptr)).*pmf)(std::forward<Args>(args)...);
