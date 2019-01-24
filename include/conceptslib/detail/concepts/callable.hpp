@@ -13,6 +13,16 @@
 
 #include <conceptslib/detail/concepts/concepts.hpp>
 
+#ifdef __clang__
+    #define SUPPORTS_STD_INVOKE (__clang_major__ > 6)
+#else
+    #define SUPPORTS_STD_INVOKE true
+#endif
+
+#if !SUPPORTS_STD_INVOKE
+#include <conceptslib/detail/functional/invoke.hpp>
+#endif
+
 namespace concepts
 {
 
@@ -23,10 +33,19 @@ namespace detail
 
 REQUIREMENT InvocableReq
 {
+#if SUPPORTS_STD_INVOKE
+    // As spec'd by the concepts library:
+    // Compiles fine with gcc and Clang 7 (but not 6)
     template<class F, class... Args>
     auto REQUIRES(F&& f, Args&&... args) -> decltype(
         std::invoke(std::forward<F>(f), std::forward<Args>(args)...)
     );
+#else
+    // Alternative implementation
+    template<class F, class... Args>
+    auto REQUIRES(F&&, Args&&... args) -> invoke_result_t<F, Args...>;
+
+#endif
 };
 
 } // namespace detail
@@ -42,6 +61,8 @@ CONCEPT Invocable = requires_<detail::InvocableReq, F, Args...>;
  * @concept The RegularInvocable concept adds to the Invocable concept by
  * requiring the invoke expression to be equality preserving and not modify
  * either the function object or the arguments.
+ * @note The distinction between Invocable and RegularInvocable is purely
+ * semantic.
  */
 template<class F, class... Args>
 CONCEPT RegularInvocable = Invocable<F, Args...>;
@@ -74,6 +95,8 @@ CONCEPT Relation =
  * @concept Specifies that a Relation imposes a strict weak ordering
  * @details Specifies that the Relation R imposes a strict weak ordering on its
  * arguments.
+ * @note The distinction between Relation and StrictWeakOrder is purely
+ * semantic.
  * @note More details at
  * https://en.cppreference.com/w/cpp/concepts/StrictWeakOrder
  */

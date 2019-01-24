@@ -29,6 +29,16 @@ TEST(CallableConcepts, ConceptInvocable)
 {
     using concepts::Invocable;
 
+    struct Functor { void operator()(int&); };
+
+    struct X
+    {
+        int intMember;
+        void memberFunction(int&);
+    };
+
+    struct Z { };
+
     CONCEPT_ASSERT(!Invocable<void, void>);
     CONCEPT_ASSERT(Invocable<decltype(increment), int&>);
     CONCEPT_ASSERT(!Invocable<decltype(increment), int>);
@@ -37,6 +47,21 @@ TEST(CallableConcepts, ConceptInvocable)
     CONCEPT_ASSERT(Invocable<decltype(increment_by_clref), int&>);
     CONCEPT_ASSERT(Invocable<decltype(increment_by_clref), const int&>);
     CONCEPT_ASSERT(Invocable<decltype(increment_by_clref), int&&>);
+
+    CONCEPT_ASSERT(!Invocable<Functor, int>);
+    CONCEPT_ASSERT(Invocable<Functor, int&>);
+    CONCEPT_ASSERT(!Invocable<Functor, const int&>);
+    CONCEPT_ASSERT(!Invocable<Functor, int&&>);
+
+    CONCEPT_ASSERT(Invocable<int X::*, X>);
+    CONCEPT_ASSERT(Invocable<decltype(&X::intMember), X>);
+    CONCEPT_ASSERT(Invocable<decltype(&X::intMember), X*>);
+    CONCEPT_ASSERT(!Invocable<decltype(&X::intMember), Z>);
+
+    CONCEPT_ASSERT(Invocable<void(X::*)(int&), X, int&>);
+    CONCEPT_ASSERT(!Invocable<void(X::*)(int&), X, int&&>);
+    CONCEPT_ASSERT(Invocable<decltype(&X::memberFunction), X, int&>);
+    CONCEPT_ASSERT(!Invocable<decltype(&X::memberFunction), X, int&&>);
 
     CONCEPT_ASSERT(Invocable<decltype(lambda1), std::string>);
     CONCEPT_ASSERT(Invocable<decltype(lambda1), std::string&>);
@@ -70,7 +95,22 @@ TEST(CallableConcepts, ConceptPredicate)
 {
     using concepts::Predicate;
 
+    struct PredicateFunctor { bool operator()(int, int); };
+    struct X
+    {
+        bool predicate(int, int);
+        std::string notPredicate();
+    };
+
     CONCEPT_ASSERT(!Predicate<void, void>);
+
+    CONCEPT_ASSERT(Predicate<PredicateFunctor, int, int>);
+
+    CONCEPT_ASSERT(Predicate<bool(X::*)(int, int), X, int, int>);
+    CONCEPT_ASSERT(Predicate<decltype(&X::predicate), X, int, int>);
+
+    CONCEPT_ASSERT(concepts::Invocable<decltype(&X::notPredicate), X>);
+    CONCEPT_ASSERT(!Predicate<decltype(&X::notPredicate), X>);
 
     CONCEPT_ASSERT(Predicate<decltype(pred), int, std::string>);
     CONCEPT_ASSERT(Predicate<decltype(pred), int, std::string&>);
