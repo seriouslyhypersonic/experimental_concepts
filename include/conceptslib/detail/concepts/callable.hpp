@@ -30,7 +30,6 @@ namespace concepts
 
 namespace detail
 {
-
 REQUIREMENT InvocableReq
 {
 #if SUPPORTS_STD_INVOKE
@@ -44,7 +43,6 @@ REQUIREMENT InvocableReq
     // Alternative implementation
     template<class F, class... Args>
     auto REQUIRES(F&&, Args&&... args) -> invoke_result_t<F, Args...>;
-
 #endif
 };
 
