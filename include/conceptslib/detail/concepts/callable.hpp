@@ -12,23 +12,7 @@
 #include <utility>
 
 #include <conceptslib/detail/concepts/concepts.hpp>
-
-#ifdef __clang__
-    #ifndef __APPLE__
-        #define SUPPORTS_STD_INVOKE (__clang_major__ > 6)
-    #else
-        #define SUPPORTS_STD_INVOKE false
-    #endif
-#else
-    #define SUPPORTS_STD_INVOKE true
-#endif
-
-#if !SUPPORTS_STD_INVOKE
-    #include <conceptslib/detail/functional/invoke.hpp>
-    #define INVOKE_RESULT_T functional::invoke_result_t
-#else
-    #define INVOKE_RESULT_T std::invoke_result_t
-#endif
+#include <conceptslib/detail/macros/platform_detection.hpp>
 
 namespace concepts
 {
@@ -37,21 +21,8 @@ namespace concepts
 
 namespace detail
 {
-REQUIREMENT InvocableReq
-{
-#if SUPPORTS_STD_INVOKE
-    // As spec'd by the concepts library:
-    // Compiles fine with gcc and Clang 7 (but not 6)
-    template<class F, class... Args>
-    auto REQUIRES(F&& f, Args&&... args) -> decltype(
-        std::invoke(std::forward<F>(f), std::forward<Args>(args)...)
-    );
-#else
-    // Alternative implementation
-    template<class F, class... Args>
-    auto REQUIRES(F&&, Args&&... args) -> INVOKE_RESULT_T<F, Args...>;
-#endif
-};
+REQUIREMENT InvocableReq: platform::InvocableReqImp
+{ };
 
 } // namespace detail
 /**
@@ -82,7 +53,7 @@ CONCEPT RegularInvocable = Invocable<F, Args...>;
 template<class F, class... Args>
 CONCEPT Predicate =
     RegularInvocable<F, Args...> &&
-    Boolean<traits::detected_t<INVOKE_RESULT_T, F, Args...>>;
+    Boolean<traits::detected_t<platform::invoke_result_t, F, Args...>>;
 
 /* --- Concept Relation --- */
 /**
