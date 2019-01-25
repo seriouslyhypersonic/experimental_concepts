@@ -23,7 +23,8 @@ using invoke_result_t = std::invoke_result_t<F, Args...>;
 REQUIREMENT InvocableReqImp
 {
     // As spec'd by the concepts library:
-    // Compiles fine with gcc and Clang 7 (but not 6)
+    // Compiles fine with gcc and Clang 7 (but not 6) on linux
+    // Does not compile with Apple Clang version 10
     template<class F, class... Args>
     auto REQUIRES(F &&f, Args &&... args) -> decltype(
     invoke(std::forward<F>(f), std::forward<Args>(args)...)
