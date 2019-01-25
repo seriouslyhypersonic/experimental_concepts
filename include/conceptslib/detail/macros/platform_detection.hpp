@@ -9,14 +9,20 @@
 #ifndef DETAIL_PLATFORM_DETECTION_H
 #define DETAIL_PLATFORM_DETECTION_H
 
+#include <ciso646> // Note: only gcc version 6.1 or newer define in ciso646
+
 #ifdef __clang__
-    #ifdef __APPLE__
+    #ifdef _LIBCPP_VERSION // Using LLVM libc++
         #define SUPPORTS_STD_INVOKE false
-    #else
-#define SUPPORTS_STD_INVOKE (__clang_major__ > 6)
+    #elif defined(__GLIBCXX__) // Using GNU libstdc++
+        #define SUPPORTS_STD_INVOKE (__clang_major__ > 6)
     #endif
-#else
+#elif defined(__GLIBCXX__ ) // Using GNU libstdc++
     #define SUPPORTS_STD_INVOKE true
+#elif defined(_LIBCPP_VERSION) // Using LLVM libc++
+    #define SUPPORTS_STD_INVOKE false???
+#elif defined(_CPPLIB_VER) // Note: used by Visual Studio
+    #define SUPPORTS_STD_INVOKE false???
 #endif
 
 #if SUPPORTS_STD_INVOKE

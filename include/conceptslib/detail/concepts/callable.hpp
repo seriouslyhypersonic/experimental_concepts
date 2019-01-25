@@ -16,9 +16,7 @@
 
 namespace concepts
 {
-
 /* --- Concept Invocable --- */
-
 namespace detail
 {
 REQUIREMENT InvocableReq: platform::InvocableReqImp
